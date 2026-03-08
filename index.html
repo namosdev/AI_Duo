@@ -539,8 +539,11 @@
       <div class="thoughts-header-left">
         <p class="eyebrow">Thoughts</p>
         <h2 class="sec-h" style="margin-bottom:8px">Things worth writing down.</h2>
-        <p class="sec-p">Ideas, observations, and lessons from the intersection of business, technology, and life. Cross-posted to LinkedIn and beyond.</p>
+        <p class="sec-p">Ideas, observations, and lessons from the intersection of business, technology, and life. Published on Substack — mirrored here automatically.</p>
       </div>
+      <a href="https://navinoswal.substack.com" target="_blank" class="btn-g" style="white-space:nowrap;align-self:flex-end">
+        Subscribe on Substack ↗
+      </a>
     </div>
 
     <!-- Posts will render here -->
@@ -560,7 +563,7 @@
           <h2 class="meet-title">Meet over<br><em>chai or coffee.</em></h2>
           <p class="meet-desc">Open to interesting conversations, constructive debates, new ideas, and collaborations that contribute to the public good. If you have a problem worth solving or a perspective worth sharing — reach out.</p>
           <div class="contact-links">
-            <a href="mailto:navinoswalz@gmail.com" class="contact-link">📧 navinoswalz@gmail.com</a>
+            <a href="/cdn-cgi/l/email-protection#5937382f3037362a2e383523193e34383035773a3634" class="contact-link">📧 <span class="__cf_email__" data-cfemail="5f313e293631302c283e33251f38323e3633713c3032">[email&#160;protected]</span></a>
             <a href="https://www.linkedin.com/in/namoswal/" target="_blank" class="contact-link">💼 LinkedIn ↗</a>
             <a href="https://univen.co" target="_blank" class="contact-link">🔗 univen.co ↗</a>
           </div>
@@ -626,13 +629,14 @@
     <hr class="modal-divider"/>
     <div class="modal-share">
       <span class="modal-share-label">Share this thought:</span>
+      <a id="substackReadBtn" href="https://navinoswal.substack.com" target="_blank" class="share-btn" style="background:rgba(255,102,0,0.1);color:#ff6600;text-decoration:none">📖 Read on Substack</a>
       <button class="share-btn share-li" onclick="shareLinkedIn()">💼 LinkedIn</button>
       <button class="share-btn share-copy" onclick="copyLink()">🔗 Copy link</button>
     </div>
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   // ── SCROLL REVEAL
   const obs = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
@@ -692,98 +696,97 @@
     }
   }
 
-  // ── LOAD & RENDER POSTS
-  let currentPost = null;
+  // ── SUBSTACK RSS → POSTS
+  const SUBSTACK_RSS = 'https://navinoswal.substack.com/feed';
+  const RSS2JSON    = 'https://api.rss2json.com/v1/api.json?rss_url=';
+  let currentPost   = null;
 
   function formatDate(dateStr) {
     return new Date(dateStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
-  function renderPosts(posts) {
+  // Strip HTML tags to get plain text summary
+  function stripHtml(html) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  }
+
+  // Truncate to N words
+  function truncate(str, words) {
+    const w = str.trim().split(/\s+/);
+    return w.length > words ? w.slice(0, words).join(' ') + '…' : str;
+  }
+
+  function renderPosts(items) {
     const container = document.getElementById('postsContainer');
-    if (!posts || posts.length === 0) {
+    if (!items || items.length === 0) {
       container.innerHTML = `
         <div class="posts-empty">
           <h3>Thoughts coming soon.</h3>
-          <p>Navin is writing. Check back shortly — or follow on LinkedIn for early access.</p>
+          <p>Navin is writing. Subscribe on Substack to be notified first.</p>
         </div>`;
       return;
     }
 
-    const cards = posts.map((post, index) => {
-      const featured = index === 0 ? 'featured' : '';
-      const tagsHtml = (post.tags || []).map(t => `<span class="post-tag">${t}</span>`).join('');
+    window.__posts = items;
+
+    const cards = items.map((item, index) => {
+      const featured  = index === 0 ? 'featured' : '';
+      const summary   = truncate(stripHtml(item.description || item.content || ''), index === 0 ? 45 : 28);
+      const tagsHtml  = (item.categories || []).map(t => `<span class="post-tag">${t}</span>`).join('');
       return `
-        <div class="post-card glass ${featured} reveal" onclick="openPost(${post.id ? `'${post.id}'` : index})" data-post-index="${index}">
-          <div class="post-date">${formatDate(post.created_at)}</div>
-          <h3 class="post-title">${post.title}</h3>
-          <p class="post-summary">${post.summary || ''}</p>
+        <div class="post-card glass ${featured} reveal" onclick="openPost(${index})" data-post-index="${index}">
+          <div class="post-date">${formatDate(item.pubDate)}</div>
+          <h3 class="post-title">${item.title}</h3>
+          <p class="post-summary">${summary}</p>
           ${tagsHtml ? `<div class="post-tags">${tagsHtml}</div>` : ''}
           <span class="post-read-more">Read more →</span>
         </div>`;
     }).join('');
 
     container.innerHTML = `<div class="posts-grid">${cards}</div>`;
-
-    // Store posts globally for modal access
-    window.__posts = posts;
-
-    // Re-observe new reveal elements
     document.querySelectorAll('.post-card.reveal').forEach(el => obs.observe(el));
   }
 
   async function loadPosts() {
     try {
-      const { data, error } = await db
-        .from('posts')
-        .select('*')
-        .eq('published', true)
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      renderPosts(data);
+      const res  = await fetch(`${RSS2JSON}${encodeURIComponent(SUBSTACK_RSS)}&count=9`);
+      const data = await res.json();
+      if (data.status !== 'ok') throw new Error('RSS fetch failed');
+      renderPosts(data.items);
     } catch (err) {
       document.getElementById('postsContainer').innerHTML = `
         <div class="posts-empty">
           <h3>Couldn't load posts right now.</h3>
-          <p>Please check back shortly.</p>
+          <p>Read them directly on <a href="https://navinoswal.substack.com" target="_blank" style="color:var(--sage)">Substack ↗</a></p>
         </div>`;
       console.error(err);
     }
   }
 
   // ── POST MODAL
-  function openPost(postId) {
+  function openPost(index) {
     const posts = window.__posts || [];
-    const post = posts.find(p => p.id === postId) || posts[postId];
+    const post  = posts[index];
     if (!post) return;
     currentPost = post;
 
-    document.getElementById('modalDate').textContent = formatDate(post.created_at);
+    document.getElementById('modalDate').textContent  = formatDate(post.pubDate);
     document.getElementById('modalTitle').textContent = post.title;
-    document.getElementById('modalBody').innerHTML = formatBody(post.body);
 
-    const tagsHtml = (post.tags || []).map(t => `<span class="post-tag">${t}</span>`).join('');
+    // Substack provides full HTML content in item.content
+    const bodyHtml = post.content || `<p>${stripHtml(post.description)}</p>`;
+    document.getElementById('modalBody').innerHTML = bodyHtml;
+
+    const tagsHtml = (post.categories || []).map(t => `<span class="post-tag">${t}</span>`).join('');
     document.getElementById('modalTags').innerHTML = tagsHtml;
+
+    // Update the "Read on Substack" button link
+    document.getElementById('substackReadBtn').href = post.link || 'https://navinoswal.substack.com';
 
     document.getElementById('postOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
-  }
-
-  function formatBody(text) {
-    // Convert line breaks and basic markdown-like formatting to HTML
-    return text
-      .split('\n\n')
-      .map(para => {
-        if (para.startsWith('## ')) return `<h2>${para.slice(3)}</h2>`;
-        if (para.startsWith('### ')) return `<h3>${para.slice(4)}</h3>`;
-        if (para.startsWith('> ')) return `<blockquote>${para.slice(2)}</blockquote>`;
-        if (para.startsWith('- ') || para.startsWith('* ')) {
-          const items = para.split('\n').map(l => `<li>${l.replace(/^[-*] /,'')}</li>`).join('');
-          return `<ul>${items}</ul>`;
-        }
-        return `<p>${para.replace(/\n/g,' ')}</p>`;
-      })
-      .join('');
   }
 
   function closePostModal() {
@@ -796,23 +799,12 @@
   }
 
   function shareLinkedIn() {
-    const url = encodeURIComponent(window.location.href + '#thoughts');
+    const url  = encodeURIComponent(currentPost ? currentPost.link : 'https://navinoswal.substack.com');
     const text = encodeURIComponent(currentPost ? currentPost.title : 'Thoughts by Navin Oswal');
-    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${text}`, '_blank');
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
   }
 
   function copyLink() {
-    navigator.clipboard.writeText(window.location.href + '#thoughts').then(() => {
-      const btn = document.querySelector('.share-copy');
-      const orig = btn.textContent;
-      btn.textContent = '✅ Copied!';
-      setTimeout(() => btn.textContent = orig, 2000);
-    });
-  }
-
-  // ── INIT
-  loadPosts();
-</script>
-
-</body>
-</html>
+    const link = currentPost ? currentPost.link : window.location.href + '#thoughts';
+    navigator.clipboard.writeText(link).then(() => {
+      const
