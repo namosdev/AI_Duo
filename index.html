@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Building Without Code — Navin's Stack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0d0c0a;
+      --paper: #f5f0e8;
+      --amber: #e8a020;
+      --amber-light: #f5c84a;
+      --rust: #c4440a;
+      --sage: #3a5a40;
+      --muted: #8a8070;
+      --card-bg: #1a1814;
+      --card-border: #2e2b25;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--paper);
+      font-family: 'Syne', sans-serif;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      padding: 80px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: var(--amber);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s ease forwards;
+    }
+
+    .hero-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(52px, 6vw, 88px);
+      line-height: 1.0;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.4s ease forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--amber);
+    }
+
+    .hero-desc {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 440px;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.6s ease forwards;
+    }
+
+    .hero-desc strong { color: var(--paper); font-weight: 700; }
+
+    .attempt-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(232, 160, 32, 0.1);
+      border: 1px solid rgba(232, 160, 32, 0.3);
+      border-radius: 4px;
+      padding: 12px 20px;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.8s ease forwards;
+    }
+
+    .attempt-badge .number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 36px;
+      color: var(--amber);
+      line-height: 1;
+    }
+
+    .attempt-badge .label {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .attempt-badge .label strong { color: var(--paper); display: block; }
+
+    /* ── HERO RIGHT ── */
+    .hero-right {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-right::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,160,32,0.15) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite alternate;
+    }
+
+    .orbit-container {
+      position: relative;
+      width: 380px;
+      height: 380px;
+      opacity: 0;
+      animation: fadeIn 1.2s 1s ease forwards;
+    }
+
+    .orbit-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90px; height: 90px;
+      background: var(--amber);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Serif Display', serif;
+      font-size: 11px;
+      color: var(--ink);
+      font-weight: bold;
+      text-align: center;
+      line-height: 1.3;
+      z-index: 2;
+      box-shadow: 0 0 60px rgba(232,160,32,0.4);
+    }
+
+    .orbit-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px dashed rgba(232, 160, 32, 0.2);
+      animation: spin linear infinite;
+    }
+    .orbit-ring:nth-child(2) { inset: 30px; animation-duration: 20s; }
+    .orbit-ring:nth-child(3) { inset: 70px; animation-duration: 35s; animation-direction: reverse; }
+    .orbit-ring:nth-child(4) { inset: 110px; animation-duration: 50s; }
+
+    .orbit-node {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transform: translate(-50%, -50%);
+    }
+
+    .orbit-node .icon-wrap {
+      width: 56px; height: 56px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      transition: all 0.3s;
+    }
+
+    .orbit-node:hover .icon-wrap {
+      border-color: var(--amber);
+      background: rgba(232,160,32,0.1);
+      transform: scale(1.1);
+    }
+
+    .orbit-node .node-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* Node positions around circle */
+    .node-1 { top: 5%; left: 50%; }
+    .node-2 { top: 50%; left: 95%; }
+    .node-3 { top: 95%; left: 50%; }
+    .node-4 { top: 50%; left: 5%; }
+
+    /* ── SCROLL CUE ── */
+    .scroll-cue {
+      position: absolute;
+      bottom: 40px;
+      left: 60px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      animation: fadeUp 0.8s 1.4s ease forwards;
+    }
+
+    .scroll-line {
+      width: 40px;
+      height: 1px;
+      background: var(--amber);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scroll-line::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: var(--paper);
+      animation: scanline 2s ease-in-out infinite;
+    }
+
+    .scroll-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* ── SECTION: JOURNEY ── */
+    .section {
+      padding: 120px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: var(--amber);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .section-tag::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--amber);
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(36px, 4vw, 60px);
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    /* ── TIMELINE ── */
+    .timeline {
+      margin-top: 80px;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 24px;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--amber), transparent);
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 32px;
+      margin-bottom: 56px;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.6s ease;
+    }
+
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .timeline-dot {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline-dot.amber { border-color: var(--amber); box-shadow: 0 0 20px rgba(232,160,32,0.3); }
+
+    .timeline-content h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 26px;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .timeline-content p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 560px;
+    }
+
+    .timeline-content p strong { color: var(--paper); }
+
+    .timeline-attempt {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--rust);
+      letter-spacing: 0.2em;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    /* ── STACK SECTION ── */
+    .stack-section {
+      padding: 120px 80px;
+      background: linear-gradient(180deg, transparent, rgba(232,160,32,0.03), transparent);
+    }
+
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      margin-top: 64px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid var(--card-border);
+    }
+
+    .stack-card {
+      background: var(--card-bg);
+      padding: 48px 40px;
+      border: 1px solid transparent;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease, border 0.4s ease, background 0.4s ease;
+    }
+
+    .stack-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stack-card:hover {
+      background: rgba(232,160,32,0.05);
+      border-color: rgba(232,160,32,0.2);
+      z-index: 1;
+    }
+
+    .stack-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--amber);
+      transition: height 0.4s ease;
+    }
+
+    .stack-card:hover::before { height: 100%; }
+
+    .stack-icon {
+      font-size: 40px;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .stack-role {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--amber);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .stack-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+
+    .stack-desc {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .stack-desc strong { color: var(--paper); }
+
+    .stack-flow {
+      position: absolute;
+      bottom: 24px; right: 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: rgba(232,160,32,0.3);
+    }
+
+    /* ── PHILOSOPHY SECTION ── */
+    .philosophy {
+      padding: 120px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .quote-block {
+      margin: 80px auto;
+      max-width: 800px;
+      position: relative;
+      padding: 0 60px;
+    }
+
+    .quote-block::before, .quote-block::after {
+      font-family: 'DM Serif Display', serif;
+      font-size: 120px;
+      color: rgba(232,160,32,0.15);
+      position: absolute;
+      line-height: 1;
+    }
+
+    .quote-block::before { content: '\201C'; top: -20px; left: 0; }
+    .quote-block::after { content: '\201D'; bottom: -60px; right: 0; }
+
+    .quote-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(24px, 3vw, 36px);
+      line-height: 1.4;
+      color: var(--paper);
+      font-style: italic;
+    }
+
+    .quote-text em { color: var(--amber); font-style: normal; }
+
+    /* ── PIPELINE SECTION ── */
+    .pipeline {
+      padding: 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .pipeline-flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-top: 64px;
+      overflow-x: auto;
+      padding-bottom: 16px;
+    }
+
+    .pipe-step {
+      flex: 1;
+      min-width: 140px;
+      text-align: center;
+      padding: 32px 16px;
+      position: relative;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .pipe-step:nth-child(1) { animation-delay: 0.1s; }
+    .pipe-step:nth-child(3) { animation-delay: 0.2s; }
+    .pipe-step:nth-child(5) { animation-delay: 0.3s; }
+    .pipe-step:nth-child(7) { animation-delay: 0.4s; }
+    .pipe-step:nth-child(9) { animation-delay: 0.5s; }
+
+    .pipe-icon {
+      width: 64px; height: 64px;
+      border-radius: 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 16px;
+      transition: all 0.3s;
+    }
+
+    .pipe-step:hover .pipe-icon {
+      border-color: var(--amber);
+      box-shadow: 0 0 30px rgba(232,160,32,0.2);
+      transform: translateY(-4px);
+    }
+
+    .pipe-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 1.5;
+    }
+
+    .pipe-arrow {
+      font-size: 20px;
+      color: rgba(232,160,32,0.4);
+      padding: 0 4px;
+      animation: arrowPulse 2s ease-in-out infinite;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 60px 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+    }
+
+    .footer-brand span { color: var(--amber); }
+
+    .footer-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: right;
+      line-height: 1.8;
+    }
+
+    .footer-meta a { color: var(--amber); text-decoration: none; }
+    .footer-meta a:hover { text-decoration: underline; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      from { transform: scale(0.95); opacity: 0.8; }
+      to   { transform: scale(1.05); opacity: 1; }
+    }
+
+    @keyframes scanline {
+      0% { left: -100%; }
+      100% { left: 200%; }
+    }
+
+    @keyframes arrowPulse {
+      0%, 100% { opacity: 0.4; transform: translateX(0); }
+      50% { opacity: 0.8; transform: translateX(4px); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 80px 32px; }
+      .section, .pipeline, .philosophy { padding: 80px 32px; }
+      .stack-section { padding: 80px 32px; }
+      .stack-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 24px; text-align: center; }
+      .footer-meta { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ HERO ══ -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="eyebrow">// founder · builder · learner</p>
+
+      <h1 class="hero-title">
+        Building<br>
+        without<br>
+        <em>code.</em>
+      </h1>
+
+      <p class="hero-desc">
+        What you're looking at is <strong>a live proof of concept</strong> — built by a non-coder, 
+        hosted on the internet, using nothing but the right tools stitched together with intent.
+        No CS degree. No engineering team. <strong>Just curiosity and the right stack.</strong>
+      </p>
+
+      <div class="attempt-badge">
+        <div class="number">5th</div>
+        <div class="label">
+          <strong>Attempt</strong>
+          Each failure taught what the next one needed.
+        </div>
+      </div>
+
+      <div class="scroll-cue">
+        <div class="scroll-line"></div>
+        <span class="scroll-text">Scroll to explore</span>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="orbit-container">
+        <div class="orbit-ring"></div>
+        <div class="orbit-ring"></div>
+        <div class="orbit-ring"></div>
+
+        <div class="orbit-center">The<br>Stack</div>
+
+        <div class="orbit-node node-1">
+          <div class="icon-wrap">🤖</div>
+          <span class="node-label">Claude</span>
+        </div>
+        <div class="orbit-node node-2">
+          <div class="icon-wrap">▲</div>
+          <span class="node-label">Vercel</span>
+        </div>
+        <div class="orbit-node node-3">
+          <div class="icon-wrap">🗄️</div>
+          <span class="node-label">Supabase</span>
+        </div>
+        <div class="orbit-node node-4">
+          <div class="icon-wrap">🐙</div>
+          <span class="node-label">GitHub</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ JOURNEY ══ -->
+  <section class="section">
+    <p class="section-tag">The Journey</p>
+    <h2 class="section-title">Four failures.<br>One hard-earned lesson.</h2>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🌱</div>
+        <div class="timeline-content">
+          <div class="timeline-attempt">Attempt 1–4 · The Pattern</div>
+          <h3>Built the dream. Lost the thread.</h3>
+          <p>
+            Each venture started with the same energy — a real problem, a clear vision, a committed founder. 
+            But without the ability to <strong>build fast, test fast, and learn fast</strong>, 
+            every cycle stretched too long and cost too much before answers arrived.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">💡</div>
+        <div class="timeline-content">
+          <div class="timeline-attempt">The Shift · 2024</div>
+          <h3>AI changed the equation.</h3>
+          <p>
+            When AI tools became genuinely capable of writing production-grade code, 
+            the 40-year advantage of knowing how to code <strong>compressed into a 40-minute learning curve.</strong> 
+            The barrier wasn't knowledge anymore — it was knowing what to ask for.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot amber">🚀</div>
+        <div class="timeline-content">
+          <div class="timeline-attempt">Now · Attempt 5</div>
+          <h3>Building BasalOS — with AI as the team.</h3>
+          <p>
+            A modular real estate operating system. Built by a non-coder. Using 
+            <strong>Claude for intelligence, GitHub for version control, Vercel for deployment, 
+            and Supabase for data.</strong> The stack you're looking at is the proof.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ PHILOSOPHY QUOTE ══ -->
+  <div class="philosophy">
+    <div class="quote-block">
+      <p class="quote-text">
+        The question was never <em>"can I code?"</em><br>
+        It was always <em>"can I build?"</em>
+      </p>
+    </div>
+  </div>
+
+  <!-- ══ STACK ══ -->
+  <div class="stack-section">
+    <div style="max-width:1200px; margin:0 auto;">
+      <p class="section-tag">The Stack</p>
+      <h2 class="section-title">Four tools.<br>One complete system.</h2>
+
+      <div class="stack-grid">
+
+        <div class="stack-card">
+          <span class="stack-icon">🤖</span>
+          <div class="stack-role">Intelligence Layer</div>
+          <h3 class="stack-name">Claude</h3>
+          <p class="stack-desc">
+            The AI pair programmer that writes, reviews, and explains code. 
+            <strong>You describe what you want in plain English</strong> — Claude turns it into 
+            working, production-grade code. It also explains every decision so you learn as you build.
+          </p>
+          <div class="stack-flow">→ writes code</div>
+        </div>
+
+        <div class="stack-card">
+          <span class="stack-icon">🐙</span>
+          <div class="stack-role">Memory Layer</div>
+          <h3 class="stack-name">GitHub</h3>
+          <p class="stack-desc">
+            The version control system that tracks every change to your project. 
+            Think of it as <strong>unlimited undo history for your entire codebase</strong> — 
+            with the ability to branch, experiment, and always return to a working state.
+          </p>
+          <div class="stack-flow">→ stores history</div>
+        </div>
+
+        <div class="stack-card">
+          <span class="stack-icon">▲</span>
+          <div class="stack-role">Deployment Layer</div>
+          <h3 class="stack-name">Vercel</h3>
+          <p class="stack-desc">
+            The hosting platform that watches your GitHub and <strong>automatically publishes 
+            every update to the internet</strong> — no manual uploads, no server management. 
+            Push to GitHub. It's live in under a minute.
+          </p>
+          <div class="stack-flow">→ publishes live</div>
+        </div>
+
+        <div class="stack-card">
+          <span class="stack-icon">🗄️</span>
+          <div class="stack-role">Data Layer</div>
+          <h3 class="stack-name">Supabase</h3>
+          <p class="stack-desc">
+            The database that stores everything dynamic — user data, form submissions, 
+            leads, records. <strong>Without Supabase, nothing persists.</strong> 
+            With it, your app becomes a real product that remembers things across sessions.
+          </p>
+          <div class="stack-flow">→ persists data</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PIPELINE ══ -->
+  <div class="pipeline">
+    <p class="section-tag">How it flows</p>
+    <h2 class="section-title">From idea to internet<br>in four steps.</h2>
+
+    <div class="pipeline-flow">
+      <div class="pipe-step">
+        <div class="pipe-icon">💬</div>
+        <div class="pipe-label">You describe<br>what you want</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🤖</div>
+        <div class="pipe-label">Claude<br>writes the code</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🐙</div>
+        <div class="pipe-label">GitHub<br>saves the version</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-icon">▲</div>
+        <div class="pipe-label">Vercel<br>publishes it live</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🌍</div>
+        <div class="pipe-label">The world<br>can see it</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <div class="footer-brand">
+      Navin <span>·</span> Building in public
+    </div>
+    <div class="footer-meta">
+      Built with Claude · Hosted on Vercel · Versioned on GitHub<br>
+      <a href="https://basalos.com" target="_blank">BasalOS</a> · 
+      <a href="https://univen.co" target="_blank">UNIVEN</a> ·
+      Fifth attempt. Still going.
+    </div>
+  </footer>
+
+  <script>
+    // Intersection observer for scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.timeline-item, .stack-card').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Stagger stack cards
+    document.querySelectorAll('.stack-card').forEach((card, i) => {
+      card.style.transitionDelay = `${i * 0.1}s`;
+    });
+  </script>
+
+</body>
+</html>
