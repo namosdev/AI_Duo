@@ -318,8 +318,10 @@
     /* ── ANIMATIONS ── */
     @keyframes up    {from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
     @keyframes fadein{from{opacity:0;}to{opacity:1;}}
-    .reveal{opacity:0;transform:translateY(26px);transition:opacity 0.65s ease,transform 0.65s ease;}
-    .reveal.on{opacity:1;transform:translateY(0);}
+    /* Reveal: visible by default, animate in when .on is added */
+    .reveal{opacity:1;transform:translateY(0);}
+    .reveal.anim{opacity:0;transform:translateY(26px);transition:opacity 0.65s ease,transform 0.65s ease;}
+    .reveal.anim.on{opacity:1;transform:translateY(0);}
 
     /* ── RESPONSIVE ── */
     @media(max-width:860px){
@@ -637,13 +639,27 @@
 </div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-  // ── SCROLL REVEAL
+  // ── SCROLL REVEAL (safe version)
+  // First mark all reveal elements for animation, then observe
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('anim'));
+
   const obs = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
-      if (e.isIntersecting) setTimeout(() => e.target.classList.add('on'), i * 65);
+      if (e.isIntersecting) {
+        setTimeout(() => {
+          e.target.classList.add('on');
+          obs.unobserve(e.target);
+        }, i * 65);
+      }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Safety net: after 2s, show anything still hidden
+  setTimeout(() => {
+    document.querySelectorAll('.reveal.anim:not(.on)').forEach(el => el.classList.add('on'));
+  }, 2000);
 
   // ── MEETING TYPE TOGGLE
   let selectedType = 'online';
@@ -697,24 +713,28 @@
   }
 
   // ── SUBSTACK RSS → POSTS
-  const SUBSTACK_RSS = 'https://navinoswal.substack.com/feed';
-  const RSS2JSON    = 'https://api.rss2json.com/v1/api.json?rss_url=';
-  let currentPost   = null;
+  const SUBSTACK_HOME = 'https://substack.com/@navinoswal';
+  // Try both possible feed URLs (profile-based vs subdomain-based)
+  const SUBSTACK_FEEDS = [
+    'https://navinoswal.substack.com/feed',
+    'https://substack.com/@navinoswal/feed'
+  ];
+  let currentPost = null;
 
   function formatDate(dateStr) {
-    return new Date(dateStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+    const d = new Date(dateStr);
+    if (isNaN(d)) return '';
+    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
-  // Strip HTML tags to get plain text summary
   function stripHtml(html) {
     const tmp = document.createElement('div');
-    tmp.innerHTML = html;
+    tmp.innerHTML = html || '';
     return tmp.textContent || tmp.innerText || '';
   }
 
-  // Truncate to N words
   function truncate(str, words) {
-    const w = str.trim().split(/\s+/);
+    const w = (str || '').trim().split(/\s+/);
     return w.length > words ? w.slice(0, words).join(' ') + '…' : str;
   }
 
@@ -724,19 +744,17 @@
       container.innerHTML = `
         <div class="posts-empty">
           <h3>Thoughts coming soon.</h3>
-          <p>Navin is writing. Subscribe on Substack to be notified first.</p>
+          <p>Navin is writing. <a href="${SUBSTACK_HOME}" target="_blank" style="color:var(--sage);font-weight:600">Subscribe on Substack ↗</a> to be notified first.</p>
         </div>`;
       return;
     }
-
     window.__posts = items;
-
     const cards = items.map((item, index) => {
-      const featured  = index === 0 ? 'featured' : '';
-      const summary   = truncate(stripHtml(item.description || item.content || ''), index === 0 ? 45 : 28);
-      const tagsHtml  = (item.categories || []).map(t => `<span class="post-tag">${t}</span>`).join('');
+      const featured = index === 0 ? 'featured' : '';
+      const summary  = truncate(stripHtml(item.description || item.content || ''), index === 0 ? 45 : 28);
+      const tagsHtml = (item.categories || []).slice(0,3).map(t => `<span class="post-tag">${t}</span>`).join('');
       return `
-        <div class="post-card glass ${featured} reveal" onclick="openPost(${index})" data-post-index="${index}">
+        <div class="post-card glass ${featured}" onclick="openPost(${index})">
           <div class="post-date">${formatDate(item.pubDate)}</div>
           <h3 class="post-title">${item.title}</h3>
           <p class="post-summary">${summary}</p>
@@ -744,24 +762,37 @@
           <span class="post-read-more">Read more →</span>
         </div>`;
     }).join('');
-
     container.innerHTML = `<div class="posts-grid">${cards}</div>`;
-    document.querySelectorAll('.post-card.reveal').forEach(el => obs.observe(el));
+  }
+
+  async function tryFeed(url) {
+    const api = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=9`;
+    const res  = await fetch(api);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error('RSS error: ' + data.message);
+    return data.items || [];
   }
 
   async function loadPosts() {
-    try {
-      const res  = await fetch(`${RSS2JSON}${encodeURIComponent(SUBSTACK_RSS)}&count=9`);
-      const data = await res.json();
-      if (data.status !== 'ok') throw new Error('RSS fetch failed');
-      renderPosts(data.items);
-    } catch (err) {
-      document.getElementById('postsContainer').innerHTML = `
+    const container = document.getElementById('postsContainer');
+    let loaded = false;
+    for (const url of SUBSTACK_FEEDS) {
+      try {
+        const items = await tryFeed(url);
+        renderPosts(items);
+        loaded = true;
+        break;
+      } catch(e) {
+        console.warn('Feed failed:', url, e.message);
+      }
+    }
+    if (!loaded) {
+      container.innerHTML = `
         <div class="posts-empty">
-          <h3>Couldn't load posts right now.</h3>
-          <p>Read them directly on <a href="https://navinoswal.substack.com" target="_blank" style="color:var(--sage)">Substack ↗</a></p>
+          <h3>Thoughts coming soon.</h3>
+          <p>Read them on <a href="${SUBSTACK_HOME}" target="_blank" style="color:var(--sage);font-weight:600">Substack ↗</a> — or check back here once the first post is published.</p>
         </div>`;
-      console.error(err);
     }
   }
 
