@@ -3,128 +3,128 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Navin Oswal — Building the Future, Attempt by Attempt</title>
+  <title>Navin Oswal — Curious by Nature. Optimist by Choice.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --indigo: #4f46e5;
-      --indigo-light: #818cf8;
-      --teal: #0d9488;
-      --teal-light: #5eead4;
-      --coral: #f97316;
-      --text: #0f172a;
+      --sage:     #2d6a4f;
+      --sage-l:   #52b788;
+      --amber:    #b45309;
+      --amber-l:  #fbbf24;
+      --slate:    #1e3a5f;
+      --slate-l:  #93c5fd;
+      --text:     #0f172a;
       --text-mid: #334155;
       --text-muted: #64748b;
-      --glass-bg: rgba(255,255,255,0.55);
-      --glass-border: rgba(255,255,255,0.85);
-      --glass-shadow: 0 8px 32px rgba(99,102,241,0.10);
+      --glass:    rgba(255,255,255,0.58);
+      --glass-b:  rgba(255,255,255,0.88);
+      --g-shadow: 0 8px 32px rgba(45,106,79,0.08);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Outfit', sans-serif;
       color: var(--text);
+      background: #f7fdf9;
       overflow-x: hidden;
-      background: #f0f7ff;
       min-height: 100vh;
     }
 
-    .bg-canvas {
+    /* ── BACKGROUND ── */
+    .bg {
       position: fixed;
       inset: 0;
       z-index: 0;
       overflow: hidden;
+      pointer-events: none;
     }
 
-    .bg-canvas::before {
+    .bg::before {
       content: '';
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 60% at 15% 10%, rgba(165,180,252,0.45) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 85% 15%, rgba(94,234,212,0.35) 0%, transparent 55%),
-        radial-gradient(ellipse 70% 60% at 50% 95%, rgba(251,207,232,0.4) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 90% 70%, rgba(165,243,252,0.3) 0%, transparent 50%),
-        linear-gradient(160deg, #e0f2fe 0%, #f0fdf4 40%, #fdf4ff 100%);
+        radial-gradient(ellipse 70% 55% at 5% 5%,   rgba(167,243,208,0.5) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 95% 10%,  rgba(253,230,138,0.35) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 45% at 80% 90%,  rgba(147,197,253,0.3) 0%, transparent 55%),
+        radial-gradient(ellipse 65% 50% at 15% 85%,  rgba(167,243,208,0.25) 0%, transparent 60%),
+        linear-gradient(155deg, #ecfdf5 0%, #fffbeb 45%, #eff6ff 100%);
     }
 
     .blob {
       position: absolute;
       border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.5;
-      animation: blobFloat ease-in-out infinite alternate;
+      filter: blur(90px);
+      opacity: 0.45;
+      animation: drift ease-in-out infinite alternate;
     }
+    .b1 { width:520px;height:520px;background:rgba(110,231,183,0.28);top:-120px;left:-80px;animation-duration:9s; }
+    .b2 { width:380px;height:380px;background:rgba(253,211,77,0.22);top:25%;right:-60px;animation-duration:12s;animation-delay:-4s; }
+    .b3 { width:420px;height:420px;background:rgba(147,197,253,0.22);bottom:5%;right:10%;animation-duration:10s;animation-delay:-6s; }
+    .b4 { width:300px;height:300px;background:rgba(110,231,183,0.2);bottom:20%;left:5%;animation-duration:14s;animation-delay:-2s; }
 
-    .blob-1 { width: 500px; height: 500px; background: rgba(129,140,248,0.3); top: -100px; left: -100px; animation-duration: 8s; }
-    .blob-2 { width: 400px; height: 400px; background: rgba(94,234,212,0.25); top: 20%; right: -80px; animation-duration: 11s; animation-delay: -3s; }
-    .blob-3 { width: 350px; height: 350px; background: rgba(251,207,232,0.35); bottom: 10%; left: 20%; animation-duration: 9s; animation-delay: -5s; }
-    .blob-4 { width: 300px; height: 300px; background: rgba(253,186,116,0.2); bottom: 30%; right: 15%; animation-duration: 13s; animation-delay: -2s; }
-
-    @keyframes blobFloat {
+    @keyframes drift {
       from { transform: translate(0,0) scale(1); }
-      to   { transform: translate(30px,20px) scale(1.05); }
+      to   { transform: translate(24px,18px) scale(1.04); }
     }
 
+    /* ── GLASS UTILS ── */
     .glass {
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid var(--glass-border);
+      background: var(--glass);
+      backdrop-filter: blur(22px) saturate(170%);
+      -webkit-backdrop-filter: blur(22px) saturate(170%);
+      border: 1px solid var(--glass-b);
       border-radius: 24px;
-      box-shadow: var(--glass-shadow);
+      box-shadow: var(--g-shadow);
     }
 
     .glass-sm {
-      background: rgba(255,255,255,0.65);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255,255,255,0.68);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border: 1px solid rgba(255,255,255,0.92);
       border-radius: 14px;
-      box-shadow: 0 4px 16px rgba(99,102,241,0.08);
+      box-shadow: 0 4px 16px rgba(45,106,79,0.07);
     }
 
-    .container {
+    /* ── LAYOUT ── */
+    .wrap {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 0 32px;
+      padding: 0 36px;
       position: relative;
       z-index: 2;
     }
 
-    /* NAV */
+    /* ── NAV ── */
     nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      inset: 0 0 auto;
       z-index: 100;
-      padding: 16px 32px;
+      padding: 14px 36px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(255,255,255,0.65);
+      background: rgba(255,255,255,0.68);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border-bottom: 1px solid rgba(255,255,255,0.75);
+      border-bottom: 1px solid rgba(255,255,255,0.78);
     }
 
-    .nav-brand {
-      font-family: 'Playfair Display', serif;
-      font-size: 20px;
+    .nav-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
       color: var(--text);
+      letter-spacing: -0.01em;
     }
+    .nav-name span { color: var(--sage); font-style: italic; }
 
-    .nav-brand span { color: var(--indigo); }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-      align-items: center;
-    }
+    .nav-links { display:flex; gap:28px; list-style:none; align-items:center; }
 
     .nav-links a {
       font-size: 13px;
@@ -134,20 +134,22 @@
       transition: color 0.2s;
     }
 
-    .nav-links a:hover { color: var(--indigo); }
+    .nav-links a:hover { color: var(--sage); }
 
-    .nav-cta {
-      background: var(--indigo) !important;
+    .nav-btn {
+      background: var(--sage) !important;
       color: white !important;
-      padding: 8px 20px !important;
+      padding: 8px 20px;
       border-radius: 100px;
       font-weight: 600 !important;
-      transition: all 0.2s !important;
+      font-size: 13px !important;
+      transition: all 0.25s;
+      box-shadow: 0 4px 14px rgba(45,106,79,0.25);
     }
 
-    .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(79,70,229,0.3); }
+    .nav-btn:hover { background: #1f5c3a !important; transform: translateY(-1px); }
 
-    /* HERO */
+    /* ── HERO ── */
     .hero {
       min-height: 100vh;
       display: flex;
@@ -157,78 +159,95 @@
       z-index: 2;
     }
 
-    .hero-inner {
+    .hero-grid {
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
+      grid-template-columns: 1.2fr 0.8fr;
       gap: 56px;
       align-items: center;
       width: 100%;
     }
 
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
+    .chip-row {
+      display: flex;
       gap: 8px;
-      padding: 7px 18px 7px 10px;
-      border-radius: 100px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--teal);
+      flex-wrap: wrap;
       margin-bottom: 28px;
       opacity: 0;
-      animation: fadeUp 0.7s 0.2s ease forwards;
+      animation: up 0.7s 0.2s ease forwards;
     }
 
-    .live-dot {
-      width: 8px; height: 8px;
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 13px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .chip-sage   { background: rgba(45,106,79,0.1);  color: var(--sage); }
+    .chip-amber  { background: rgba(180,83,9,0.1);   color: var(--amber); }
+    .chip-slate  { background: rgba(30,58,95,0.1);   color: var(--slate); }
+
+    .chip .dot {
+      width: 6px; height: 6px;
       border-radius: 50%;
-      background: var(--teal);
-      animation: dotPulse 2s ease infinite;
+      background: currentColor;
+      animation: pulse 2s infinite;
     }
 
-    @keyframes dotPulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(13,148,136,0.5); }
-      50% { box-shadow: 0 0 0 6px rgba(13,148,136,0); }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+      50% { box-shadow: 0 0 0 5px transparent; opacity: 0.7; }
     }
 
-    .hero-name {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(52px, 5.5vw, 80px);
+    .hero-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 5.8vw, 82px);
+      font-weight: 600;
       line-height: 1.0;
       letter-spacing: -0.025em;
-      margin-bottom: 22px;
+      margin-bottom: 10px;
       opacity: 0;
-      animation: fadeUp 0.8s 0.35s ease forwards;
+      animation: up 0.8s 0.35s ease forwards;
     }
 
-    .hero-name .accent { color: var(--indigo); font-style: italic; }
+    .hero-sub-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(22px, 2.8vw, 34px);
+      font-style: italic;
+      color: var(--sage);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: up 0.8s 0.45s ease forwards;
+    }
 
-    .hero-subtitle {
-      font-size: 17px;
-      line-height: 1.7;
+    .hero-para {
+      font-size: 16px;
+      line-height: 1.75;
       color: var(--text-mid);
+      max-width: 500px;
       margin-bottom: 40px;
-      max-width: 480px;
       font-weight: 400;
       opacity: 0;
-      animation: fadeUp 0.8s 0.5s ease forwards;
+      animation: up 0.8s 0.58s ease forwards;
     }
 
-    .hero-subtitle strong { color: var(--text); font-weight: 600; }
+    .hero-para strong { color: var(--text); font-weight: 600; }
 
-    .hero-actions {
+    .hero-btns {
       display: flex;
       gap: 14px;
       align-items: center;
       opacity: 0;
-      animation: fadeUp 0.8s 0.65s ease forwards;
+      animation: up 0.8s 0.7s ease forwards;
     }
 
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--indigo);
+    .btn-p {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--sage);
       color: white;
       padding: 14px 28px;
       border-radius: 100px;
@@ -236,169 +255,160 @@
       font-weight: 600;
       text-decoration: none;
       transition: all 0.25s;
-      box-shadow: 0 4px 20px rgba(79,70,229,0.3);
+      box-shadow: 0 4px 20px rgba(45,106,79,0.28);
     }
 
-    .btn-primary:hover { background: #4338ca; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(79,70,229,0.4); }
+    .btn-p:hover { background: #1f5c3a; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(45,106,79,0.35); }
 
-    .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+    .btn-g {
+      display: inline-flex; align-items: center; gap: 8px;
       color: var(--text-mid);
       padding: 14px 24px;
       border-radius: 100px;
       font-size: 14px;
       font-weight: 500;
       text-decoration: none;
-      background: rgba(255,255,255,0.65);
+      background: rgba(255,255,255,0.68);
       border: 1px solid rgba(255,255,255,0.92);
       transition: all 0.25s;
     }
 
-    .btn-ghost:hover { background: rgba(255,255,255,0.9); transform: translateY(-1px); }
+    .btn-g:hover { background: rgba(255,255,255,0.9); transform: translateY(-1px); }
 
-    /* HERO CARD */
-    .hero-card-area {
+    /* PROFILE CARD */
+    .profile-area {
       opacity: 0;
-      animation: fadeIn 1s 0.8s ease forwards;
+      animation: fadein 1s 0.85s ease forwards;
       position: relative;
     }
 
-    .profile-glass {
-      padding: 36px;
-      text-align: center;
-    }
-
-    .avatar-wrap {
-      width: 96px; height: 96px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--indigo-light), var(--teal-light));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
-      font-family: 'Playfair Display', serif;
-      font-size: 40px;
-      color: white;
-      box-shadow: 0 8px 32px rgba(79,70,229,0.25);
-    }
-
-    .profile-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      margin-bottom: 4px;
-    }
-
-    .profile-title {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 20px;
-    }
-
-    .profile-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      justify-content: center;
-      margin-bottom: 22px;
-    }
-
-    .tag {
-      padding: 5px 12px;
-      border-radius: 100px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .tag-i { background: rgba(79,70,229,0.1); color: var(--indigo); }
-    .tag-t { background: rgba(13,148,136,0.1); color: var(--teal); }
-    .tag-c { background: rgba(249,115,22,0.1); color: var(--coral); }
-
-    .attempt-box {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      padding: 16px 20px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, rgba(79,70,229,0.07), rgba(13,148,136,0.07));
-      border: 1px solid rgba(79,70,229,0.12);
-    }
-
-    .attempt-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 36px;
-      color: var(--indigo);
-      line-height: 1;
-    }
-
-    .attempt-lbl {
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.5;
-      text-align: left;
-    }
-
-    .attempt-lbl strong { color: var(--text); display: block; font-size: 13px; }
-
-    .float-card {
+    .float {
       position: absolute;
       padding: 10px 16px;
       font-size: 12px;
       font-weight: 600;
       white-space: nowrap;
-      animation: cardFloat ease-in-out infinite alternate;
+      animation: floatY ease-in-out infinite alternate;
     }
 
-    .fc1 { top: -18px; right: -16px; color: var(--teal); animation-duration: 3s; }
-    .fc2 { bottom: 36px; left: -24px; color: var(--indigo); animation-duration: 4s; animation-delay: -1.5s; }
+    .f1 { top: -18px; right: -14px; color: var(--sage); animation-duration: 3.2s; }
+    .f2 { bottom: 32px; left: -22px; color: var(--amber); animation-duration: 4.1s; animation-delay:-1.8s; }
 
-    @keyframes cardFloat {
+    @keyframes floatY {
       from { transform: translateY(0); }
       to   { transform: translateY(-10px); }
     }
 
-    /* STATS */
-    .stats-row { padding: 0 0 80px; position: relative; z-index: 2; }
+    .profile-card {
+      padding: 36px;
+      text-align: center;
+    }
 
-    .stats-grid {
+    .av {
+      width: 92px; height: 92px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sage-l), var(--amber-l));
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 8px 28px rgba(45,106,79,0.22);
+    }
+
+    .p-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .p-qual {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: var(--sage);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .p-loc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .p-tags {
+      display: flex; flex-wrap: wrap; gap: 7px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .interest-row {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .interest-item {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.85);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-mid);
+    }
+
+    /* ── ABOUT STRIP ── */
+    .about-strip {
+      padding: 0 0 80px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
       gap: 16px;
     }
 
-    .stat-card {
-      padding: 28px 20px;
+    .about-card {
+      padding: 26px 20px;
       text-align: center;
       transition: all 0.3s;
     }
 
-    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(99,102,241,0.14); }
+    .about-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(45,106,79,0.12); }
 
-    .stat-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 42px;
-      color: var(--indigo);
+    .ab-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 44px;
+      font-weight: 600;
+      color: var(--sage);
       line-height: 1;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
-    .stat-lbl {
+    .ab-lbl {
       font-size: 12px;
       color: var(--text-muted);
       font-weight: 500;
-      line-height: 1.5;
+      line-height: 1.4;
     }
 
-    /* SECTIONS */
-    section { padding: 80px 0; position: relative; z-index: 2; }
+    /* ── SECTION COMMON ── */
+    section { padding: 72px 0; position: relative; z-index: 2; }
 
     .eyebrow {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
-      letter-spacing: 0.25em;
-      color: var(--teal);
+      letter-spacing: 0.28em;
+      color: var(--sage);
       text-transform: uppercase;
       margin-bottom: 14px;
       display: flex;
@@ -408,42 +418,43 @@
 
     .eyebrow::before {
       content: '';
-      width: 28px; height: 2px;
-      background: var(--teal);
+      width: 26px; height: 2px;
+      background: var(--sage);
       border-radius: 2px;
     }
 
-    .sec-title {
-      font-family: 'Playfair Display', serif;
+    .sec-h {
+      font-family: 'Cormorant Garamond', serif;
       font-size: clamp(32px, 3.5vw, 52px);
-      line-height: 1.12;
-      margin-bottom: 14px;
+      font-weight: 600;
+      line-height: 1.1;
       letter-spacing: -0.02em;
+      margin-bottom: 14px;
     }
 
-    .sec-desc {
+    .sec-p {
       font-size: 15px;
       color: var(--text-muted);
       line-height: 1.7;
       max-width: 520px;
     }
 
-    /* PRODUCTS */
-    .products-grid {
+    /* ── JOURNEY ── */
+    .journey-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      gap: 20px;
       margin-top: 52px;
     }
 
-    .product-card {
-      padding: 40px 36px;
-      transition: all 0.35s;
+    .j-card {
+      padding: 36px 32px;
       position: relative;
+      transition: all 0.35s;
       overflow: hidden;
     }
 
-    .product-card::after {
+    .j-card::after {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -453,39 +464,127 @@
       transition: opacity 0.3s;
     }
 
-    .pc-indigo::after { background: linear-gradient(90deg, var(--indigo), var(--indigo-light)); }
-    .pc-teal::after { background: linear-gradient(90deg, var(--teal), var(--teal-light)); }
-    .product-card:hover { transform: translateY(-6px); box-shadow: 0 24px 56px rgba(99,102,241,0.12); }
-    .product-card:hover::after { opacity: 1; }
+    .j-card:nth-child(1)::after { background: linear-gradient(90deg, var(--sage), var(--sage-l)); }
+    .j-card:nth-child(2)::after { background: linear-gradient(90deg, var(--amber), var(--amber-l)); }
+    .j-card:nth-child(3)::after { background: linear-gradient(90deg, var(--slate), var(--slate-l)); }
+    .j-card:nth-child(4)::after { background: linear-gradient(90deg, var(--sage), var(--sage-l)); }
 
-    .prod-icon {
-      width: 56px; height: 56px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      margin-bottom: 22px;
+    .j-card:hover { transform: translateY(-5px); box-shadow: 0 24px 56px rgba(45,106,79,0.1); }
+    .j-card:hover::after { opacity: 1; }
+
+    .j-period {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 8px;
     }
 
-    .pi-i { background: rgba(79,70,229,0.1); }
-    .pi-t { background: rgba(13,148,136,0.1); }
+    .j-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
 
-    .prod-tagline {
+    .j-org {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-mid);
+      margin-bottom: 12px;
+    }
+
+    .j-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    .j-tags {
+      display: flex; flex-wrap: wrap; gap: 5px;
+      margin-top: 14px;
+    }
+
+    .j-tag {
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.05em;
+    }
+
+    .jt-sage  { background: rgba(45,106,79,0.08);  color: var(--sage); }
+    .jt-amber { background: rgba(180,83,9,0.08);   color: var(--amber); }
+    .jt-slate { background: rgba(30,58,95,0.08);   color: var(--slate); }
+
+    /* ── PRODUCTS ── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-top: 52px;
+    }
+
+    .prod-card {
+      padding: 40px 34px;
+      transition: all 0.35s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prod-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 24px 24px 0 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .pc-s::after { background: linear-gradient(90deg, var(--sage), var(--sage-l)); }
+    .pc-a::after { background: linear-gradient(90deg, var(--amber), var(--amber-l)); }
+
+    .prod-card:hover { transform: translateY(-6px); box-shadow: 0 24px 56px rgba(45,106,79,0.1); }
+    .prod-card:hover::after { opacity: 1; }
+
+    .prod-icon {
+      width: 54px; height: 54px;
+      border-radius: 15px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      margin-bottom: 20px;
+    }
+
+    .pi-s { background: rgba(45,106,79,0.1); }
+    .pi-a { background: rgba(180,83,9,0.1); }
+
+    .prod-label {
       font-family: 'JetBrains Mono', monospace;
       font-size: 10px;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--indigo);
       margin-bottom: 10px;
     }
 
-    .prod-tagline.teal { color: var(--teal); }
+    .pl-s { color: var(--sage); }
+    .pl-a { color: var(--amber); }
 
     .prod-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 26px;
-      margin-bottom: 12px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .prod-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
     }
 
     .prod-desc {
@@ -495,202 +594,222 @@
     }
 
     .prod-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 18px;
+      display: flex; flex-wrap: wrap; gap: 6px;
+      margin-top: 16px;
     }
 
-    .chip {
-      padding: 4px 10px;
+    .pchip {
+      padding: 3px 10px;
       border-radius: 6px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
+      font-size: 9px;
+      letter-spacing: 0.05em;
     }
 
-    .chip-i { background: rgba(79,70,229,0.08); color: var(--indigo); }
-    .chip-t { background: rgba(13,148,136,0.08); color: var(--teal); }
+    .pcs { background: rgba(45,106,79,0.08); color: var(--sage); }
+    .pca { background: rgba(180,83,9,0.08);  color: var(--amber); }
 
-    /* QUOTE */
-    .quote-sec {
-      padding: 60px 0;
+    /* ── QUOTE ── */
+    .quote-block {
+      padding: 56px 0;
       position: relative;
       z-index: 2;
     }
 
-    .quote-card {
+    .q-card {
       padding: 60px;
       text-align: center;
-      background: linear-gradient(135deg, rgba(79,70,229,0.06), rgba(13,148,136,0.06));
-      border: 1px solid rgba(79,70,229,0.12);
+      background: linear-gradient(135deg, rgba(45,106,79,0.05), rgba(180,83,9,0.05));
+      border: 1px solid rgba(45,106,79,0.12);
     }
 
-    .qmark {
-      font-family: 'Playfair Display', serif;
-      font-size: 120px;
-      line-height: 0.6;
-      color: rgba(79,70,229,0.12);
+    .qm {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 130px;
+      line-height: 0.5;
+      color: rgba(45,106,79,0.1);
       display: block;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
 
-    .qtext {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(22px, 3vw, 34px);
-      line-height: 1.45;
-      max-width: 720px;
-      margin: 0 auto 24px;
+    .qt {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(22px, 3vw, 36px);
       font-style: italic;
+      line-height: 1.45;
+      max-width: 700px;
+      margin: 0 auto 20px;
     }
 
-    .qtext em { color: var(--indigo); font-style: normal; }
+    .qt em { color: var(--sage); font-style: normal; }
 
-    .qattr {
+    .qa {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
       color: var(--text-muted);
-      letter-spacing: 0.12em;
+      letter-spacing: 0.15em;
     }
 
-    /* STACK */
-    .stack-grid {
+    /* ── PLAYGROUND ── */
+    .playground {
+      padding: 72px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .playground-inner {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 52px;
-    }
-
-    .stack-card {
-      padding: 28px;
-      display: flex;
-      gap: 18px;
-      align-items: flex-start;
-      transition: all 0.3s;
-    }
-
-    .stack-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(99,102,241,0.1); }
-
-    .s-icon {
-      width: 48px; height: 48px;
-      border-radius: 13px;
-      background: linear-gradient(135deg, rgba(79,70,229,0.1), rgba(13,148,136,0.1));
-      display: flex;
+      gap: 40px;
       align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
     }
 
-    .s-role {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      color: var(--teal);
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 4px;
+    .pg-visual {
+      padding: 36px;
+      text-align: center;
     }
 
-    .s-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 18px;
-      margin-bottom: 6px;
-    }
-
-    .s-desc {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.65;
-    }
-
-    /* PIPELINE */
-    .pipeline {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      margin-top: 52px;
-      overflow-x: auto;
-      padding: 12px 0;
-    }
-
-    .p-node {
-      flex: 1;
-      min-width: 110px;
+    .pg-flow {
       display: flex;
       flex-direction: column;
-      align-items: center;
       gap: 10px;
-      padding: 20px 12px;
-      border-radius: 18px;
-      transition: all 0.3s;
     }
 
-    .p-node:hover { background: rgba(255,255,255,0.65); box-shadow: 0 8px 24px rgba(99,102,241,0.1); }
-
-    .p-icon {
-      width: 52px; height: 52px;
-      border-radius: 14px;
+    .pg-step {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      background: rgba(255,255,255,0.75);
-      border: 1px solid rgba(255,255,255,0.95);
-      box-shadow: 0 4px 14px rgba(99,102,241,0.1);
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(255,255,255,0.9);
       transition: all 0.3s;
     }
 
-    .p-node:hover .p-icon { transform: scale(1.08); box-shadow: 0 8px 20px rgba(79,70,229,0.2); }
+    .pg-step:hover { background: rgba(255,255,255,0.85); transform: translateX(4px); }
 
-    .p-lbl { font-size: 11px; font-weight: 600; color: var(--text-mid); text-align: center; }
-    .p-sub { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-muted); text-align: center; }
-
-    .p-arr {
-      color: rgba(79,70,229,0.35);
+    .pg-step-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
       font-size: 18px;
+      background: rgba(45,106,79,0.08);
       flex-shrink: 0;
-      animation: arrPulse 2.5s ease infinite;
     }
 
-    @keyframes arrPulse {
-      0%,100% { opacity: 0.35; transform: translateX(0); }
-      50% { opacity: 0.7; transform: translateX(4px); }
+    .pg-step-text { font-size: 13px; font-weight: 500; color: var(--text-mid); }
+    .pg-step-sub  { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+
+    .pg-arrow {
+      text-align: left;
+      padding-left: 34px;
+      color: rgba(45,106,79,0.35);
+      font-size: 14px;
+      animation: arrowBob 2s ease infinite;
     }
 
-    /* LESSONS */
-    .lessons-grid {
+    @keyframes arrowBob {
+      0%,100% { opacity:0.35; transform:translateY(0); }
+      50%     { opacity:0.65; transform:translateY(3px); }
+    }
+
+    /* ── WHAT DRIVES ME ── */
+    .drives-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      margin-top: 52px;
+      gap: 16px;
+      margin-top: 48px;
     }
 
-    .lesson-card {
-      padding: 32px 26px;
+    .drive-card {
+      padding: 28px 24px;
+      text-align: center;
       transition: all 0.3s;
     }
 
-    .lesson-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(99,102,241,0.1); }
+    .drive-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(45,106,79,0.09); }
 
-    .l-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 44px;
-      color: rgba(79,70,229,0.14);
-      line-height: 1;
-      margin-bottom: 10px;
+    .drive-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+      display: block;
     }
 
-    .l-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 17px;
-      margin-bottom: 10px;
+    .drive-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
     }
 
-    .l-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+    .drive-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
 
-    /* FOOTER */
+    /* ── COFFEE CTA ── */
+    .coffee-section {
+      padding: 72px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .coffee-card {
+      padding: 60px 48px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: center;
+      background: linear-gradient(135deg, rgba(45,106,79,0.06), rgba(82,183,136,0.06));
+      border: 1px solid rgba(45,106,79,0.14);
+    }
+
+    .coffee-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(26px, 3vw, 40px);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .coffee-title em { color: var(--sage); font-style: italic; }
+
+    .coffee-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .coffee-contact {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(255,255,255,0.9);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-mid);
+      text-decoration: none;
+      transition: all 0.25s;
+      white-space: nowrap;
+    }
+
+    .contact-item:hover { background: rgba(255,255,255,0.9); transform: translateX(-3px); color: var(--sage); }
+
+    /* ── FOOTER ── */
     footer {
-      border-top: 1px solid rgba(79,70,229,0.1);
-      padding: 48px 0;
+      border-top: 1px solid rgba(45,106,79,0.1);
+      padding: 44px 0;
       position: relative;
       z-index: 2;
     }
@@ -701,12 +820,13 @@
       align-items: center;
     }
 
-    .footer-brand {
-      font-family: 'Playfair Display', serif;
+    .footer-name {
+      font-family: 'Cormorant Garamond', serif;
       font-size: 20px;
+      font-weight: 600;
     }
 
-    .footer-brand span { color: var(--indigo); }
+    .footer-name span { color: var(--sage); font-style: italic; }
 
     .footer-links { display: flex; gap: 24px; list-style: none; }
 
@@ -717,110 +837,115 @@
       transition: color 0.2s;
     }
 
-    .footer-links a:hover { color: var(--indigo); }
+    .footer-links a:hover { color: var(--sage); }
 
-    .footer-copy {
+    .footer-tag {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
       color: var(--text-muted);
     }
 
-    /* ANIMATIONS */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* ── ANIMATIONS ── */
+    @keyframes up {
+      from { opacity:0; transform: translateY(22px); }
+      to   { opacity:1; transform: translateY(0); }
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+    @keyframes fadein {
+      from { opacity:0; }
+      to   { opacity:1; }
     }
 
     .reveal {
       opacity: 0;
-      transform: translateY(28px);
+      transform: translateY(26px);
       transition: opacity 0.65s ease, transform 0.65s ease;
     }
 
-    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal.on { opacity:1; transform:translateY(0); }
 
-    /* RESPONSIVE */
+    /* ── RESPONSIVE ── */
     @media (max-width: 860px) {
-      .hero-inner { grid-template-columns: 1fr; }
-      .hero-card-area { display: none; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .products-grid, .stack-grid, .lessons-grid { grid-template-columns: 1fr; }
+      .hero-grid, .journey-grid, .products-grid,
+      .playground-inner, .coffee-card { grid-template-columns: 1fr; }
+      .profile-area { display: none; }
+      .about-grid { grid-template-columns: repeat(2,1fr); }
+      .drives-grid { grid-template-columns: 1fr; }
       nav .nav-links { display: none; }
       .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
-      .quote-card { padding: 40px 24px; }
+      .coffee-contact { align-items: flex-start; }
+      .q-card { padding: 40px 24px; }
     }
   </style>
 </head>
 <body>
 
-<div class="bg-canvas">
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
-  <div class="blob blob-4"></div>
+<div class="bg">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+  <div class="blob b4"></div>
 </div>
 
 <!-- NAV -->
 <nav>
-  <div class="nav-brand">Navin <span>Oswal</span></div>
+  <div class="nav-name">Navin <span>Oswal</span></div>
   <ul class="nav-links">
-    <li><a href="#products">Products</a></li>
-    <li><a href="#stack">Stack</a></li>
-    <li><a href="#lessons">Lessons</a></li>
-    <li><a href="https://www.linkedin.com/in/namoswal/" target="_blank" class="nav-cta">LinkedIn ↗</a></li>
+    <li><a href="#journey">Journey</a></li>
+    <li><a href="#ventures">Ventures</a></li>
+    <li><a href="#thinking">Thinking</a></li>
+    <li><a href="#connect" class="nav-btn">Let's connect ☕</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
 <div class="hero">
-  <div class="container">
-    <div class="hero-inner">
+  <div class="wrap">
+    <div class="hero-grid">
       <div>
-        <div class="glass-sm hero-tag">
-          <div class="live-dot"></div>
-          Currently building — Attempt #5
+        <div class="chip-row">
+          <span class="chip chip-sage"><span class="dot"></span> CA · 10+ yrs Real Estate</span>
+          <span class="chip chip-amber">Co-Founder · UNITS & UNIVEN</span>
+          <span class="chip chip-slate">Pune, Maharashtra</span>
         </div>
 
-        <h1 class="hero-name">
-          Founder.<br>
-          Builder.<br>
-          <span class="accent">Non-coder.</span>
-        </h1>
+        <h1 class="hero-headline">Curious<br>by Nature.</h1>
+        <div class="hero-sub-headline">Optimist by Choice.</div>
 
-        <p class="hero-subtitle">
-          I've failed <strong>four times</strong> building startups. Each attempt taught me what the next one needed. On my fifth, I discovered something radical — <strong>you don't need to code to build production software.</strong>
+        <p class="hero-para">
+          Chartered accountant with a decade at the intersection of <strong>real estate, finance, and technology.</strong>
+          I've spent years understanding how businesses actually work — their processes, their blind spots, their untapped potential —
+          and now I'm building to fix the gaps I've seen from the inside.
         </p>
 
-        <div class="hero-actions">
-          <a href="#products" class="btn-primary">See what I'm building →</a>
-          <a href="https://www.linkedin.com/in/namoswal/" target="_blank" class="btn-ghost">LinkedIn ↗</a>
+        <div class="hero-btns">
+          <a href="#ventures" class="btn-p">What I'm building →</a>
+          <a href="https://www.linkedin.com/in/namoswal/" target="_blank" class="btn-g">LinkedIn ↗</a>
         </div>
       </div>
 
-      <div class="hero-card-area">
-        <div class="float-card fc1 glass-sm">🚀 BasalOS is live</div>
-        <div class="float-card fc2 glass-sm">🤖 AI-first builder</div>
-        <div class="profile-glass glass">
-          <div class="avatar-wrap">N</div>
-          <div class="profile-name">Navin Oswal</div>
-          <div class="profile-title">Techno-Functional Founder · Mumbai, India</div>
-          <div class="profile-tags">
-            <span class="tag tag-i">Real Estate Tech</span>
-            <span class="tag tag-t">Digital KYC</span>
-            <span class="tag tag-c">No-Code / AI</span>
-            <span class="tag tag-i">Product Strategy</span>
+      <div class="profile-area">
+        <div class="float f1 glass-sm">🏗️ Building UNITS</div>
+        <div class="float f2 glass-sm">☕ Open to chai</div>
+
+        <div class="profile-card glass">
+          <div class="av">N</div>
+          <div class="p-name">Navin Oswal</div>
+          <div class="p-qual">Chartered Accountant</div>
+          <div class="p-loc">📍 Pune, Maharashtra · India</div>
+
+          <div class="p-tags">
+            <span class="chip chip-sage" style="font-size:11px">Real Estate</span>
+            <span class="chip chip-amber" style="font-size:11px">Finance</span>
+            <span class="chip chip-slate" style="font-size:11px">Technology</span>
+            <span class="chip chip-sage" style="font-size:11px">Compliance</span>
           </div>
-          <div class="attempt-box">
-            <div class="attempt-num">5<sup style="font-size:16px;color:var(--text-muted)">th</sup></div>
-            <div class="attempt-lbl">
-              <strong>Venture Attempt</strong>
-              Four lessons in. Still going.
-            </div>
+
+          <div class="interest-row">
+            <div class="interest-item">🏏 Sports forever</div>
+            <div class="interest-item">🎵 Music to unwind</div>
+            <div class="interest-item">🎬 Cinema to learn</div>
+            <div class="interest-item">🧠 WHY chaser</div>
           </div>
         </div>
       </div>
@@ -829,222 +954,281 @@
 </div>
 
 <!-- STATS -->
-<div class="stats-row">
-  <div class="container">
-    <div class="stats-grid">
-      <div class="stat-card glass reveal">
-        <div class="stat-num">5<span style="font-size:20px">th</span></div>
-        <div class="stat-lbl">Venture<br>Attempt</div>
+<div class="about-strip">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-card glass reveal">
+        <div class="ab-num">10+</div>
+        <div class="ab-lbl">Years in real<br>estate & finance</div>
       </div>
-      <div class="stat-card glass reveal">
-        <div class="stat-num">7+</div>
-        <div class="stat-lbl">Modules in<br>BasalOS</div>
+      <div class="about-card glass reveal">
+        <div class="ab-num">CA</div>
+        <div class="ab-lbl">Chartered Accountant<br>ICAI qualified</div>
       </div>
-      <div class="stat-card glass reveal">
-        <div class="stat-num">0</div>
-        <div class="stat-lbl">Lines written<br>manually</div>
+      <div class="about-card glass reveal">
+        <div class="ab-num">2</div>
+        <div class="ab-lbl">Active ventures<br>being built now</div>
       </div>
-      <div class="stat-card glass reveal">
-        <div class="stat-num">∞</div>
-        <div class="stat-lbl">Iterations<br>ahead</div>
+      <div class="about-card glass reveal">
+        <div class="ab-num">∞</div>
+        <div class="ab-lbl">Whys left<br>to understand</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- PRODUCTS -->
-<section id="products">
-  <div class="container">
-    <p class="eyebrow reveal">What I'm Building</p>
-    <h2 class="sec-title reveal">Two products.<br>One mission.</h2>
-    <p class="sec-desc reveal">Both solve real problems I've witnessed firsthand — one in real estate, one in identity. Both built lean, fast, and AI-first.</p>
+<!-- JOURNEY -->
+<section id="journey">
+  <div class="wrap">
+    <p class="eyebrow reveal">The Foundation</p>
+    <h2 class="sec-h reveal">Ten years of building<br>from the inside out.</h2>
+    <p class="sec-p reveal">Domain expertise isn't claimed — it's earned through doing the real work at every level. Here's where mine came from.</p>
 
-    <div class="products-grid">
-      <div class="product-card glass pc-indigo reveal">
-        <div class="prod-icon pi-i">🏗️</div>
-        <div class="prod-tagline">Real Estate Operating System</div>
-        <h3 class="prod-name">BasalOS</h3>
-        <p class="prod-desc">A modular OS for the full real estate lifecycle — from lead capture to project delivery. Built for developers and housing societies who need integrated intelligence, not disconnected spreadsheets.</p>
-        <div class="prod-chips">
-          <span class="chip chip-i">UNITS</span>
-          <span class="chip chip-i">BUILDS</span>
-          <span class="chip chip-i">SIGNALS</span>
-          <span class="chip chip-i">SPACES</span>
-          <span class="chip chip-i">STAKES</span>
-          <span class="chip chip-i">BLUEPRINTS</span>
-          <span class="chip chip-i">TASKS</span>
+    <div class="journey-grid">
+
+      <div class="j-card glass reveal">
+        <div class="j-period">Aug 2010 – Jul 2013</div>
+        <h3 class="j-title">The Foundation</h3>
+        <div class="j-org">Shah Khandelwal Jain & Associates, CA</div>
+        <p class="j-desc">Articled training across statutory audits, tax audits, US individual taxation, and compliance services. Where the "why" behind every number was built.</p>
+        <div class="j-tags">
+          <span class="j-tag jt-slate">Statutory Audit</span>
+          <span class="j-tag jt-slate">Tax</span>
+          <span class="j-tag jt-slate">Compliance</span>
         </div>
       </div>
 
-      <div class="product-card glass pc-teal reveal">
-        <div class="prod-icon pi-t">🔐</div>
-        <div class="prod-tagline teal">Digital KYC Platform</div>
-        <h3 class="prod-name">UNIVEN</h3>
-        <p class="prod-desc">A digital identity verification platform built for the DPDPA 2023 era. API-first architecture that lets enterprises verify identities without the compliance headache.</p>
-        <div class="prod-chips">
-          <span class="chip chip-t">API-FIRST</span>
-          <span class="chip chip-t">DPDPA 2023</span>
-          <span class="chip chip-t">ENTERPRISE</span>
-          <span class="chip chip-t">COMPLIANCE</span>
+      <div class="j-card glass reveal">
+        <div class="j-period">Jan 2014 – Oct 2024 · 10+ years</div>
+        <h3 class="j-title">The Deep Dive</h3>
+        <div class="j-org">Rohan Builders, Pune</div>
+        <p class="j-desc">A decade inside one of Pune's real estate groups — from executive to senior manager. Financial closure, RERA compliance, ERP implementations, credit ratings, MIS reporting, and cross-functional transformation.</p>
+        <div class="j-tags">
+          <span class="j-tag jt-sage">Real Estate</span>
+          <span class="j-tag jt-sage">RERA</span>
+          <span class="j-tag jt-amber">ERP</span>
+          <span class="j-tag jt-amber">MIS</span>
+          <span class="j-tag jt-slate">CARE/CRISIL</span>
         </div>
       </div>
+
+      <div class="j-card glass reveal">
+        <div class="j-period">October 2024 – Present</div>
+        <h3 class="j-title">Redefining Trust</h3>
+        <div class="j-org">UNIVEN · Co-Founder</div>
+        <p class="j-desc">Universal Business Credentials — redefining trust in the connected business ecosystem. Aiming for the stars.</p>
+        <div class="j-tags">
+          <span class="j-tag jt-amber">Business Identity</span>
+          <span class="j-tag jt-amber">Trust Infrastructure</span>
+          <span class="j-tag jt-amber">Digital Credentials</span>
+        </div>
+      </div>
+
+      <div class="j-card glass reveal">
+        <div class="j-period">December 2024 – Present</div>
+        <h3 class="j-title">The Simplest Tool</h3>
+        <div class="j-org">UNITS · Co-Founder</div>
+        <p class="j-desc">Juggling product, sales, and numbers — building the simplest real estate sales management tool for an end-to-end customer journey. No bloat. No complexity. Just what works.</p>
+        <div class="j-tags">
+          <span class="j-tag jt-sage">Real Estate CRM</span>
+          <span class="j-tag jt-sage">Sales Management</span>
+          <span class="j-tag jt-sage">Customer Journey</span>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
 <!-- QUOTE -->
-<div class="quote-sec">
-  <div class="container">
-    <div class="quote-card glass reveal">
-      <span class="qmark">"</span>
-      <p class="qtext">
-        The question was never <em>"can I code?"</em><br>
-        It was always <em>"can I build?"</em><br>
-        Turns out, they're not the same question.
+<div class="quote-block">
+  <div class="wrap">
+    <div class="q-card glass reveal">
+      <span class="qm">"</span>
+      <p class="qt">
+        I seek to understand the <em>"Why's"</em> behind everything.<br>
+        That's not a habit. That's the whole operating system.
       </p>
-      <div class="qattr">— NAVIN OSWAL · FOUNDER · 2025</div>
+      <div class="qa">— NAVIN OSWAL · CURIOUS BY NATURE · OPTIMIST BY CHOICE</div>
     </div>
   </div>
 </div>
 
-<!-- STACK -->
-<section id="stack">
-  <div class="container">
-    <p class="eyebrow reveal">The Stack</p>
-    <h2 class="sec-title reveal">Four tools that make<br>a non-coder dangerous.</h2>
-    <p class="sec-desc reveal">Not a toy setup. A production-capable pipeline built entirely without writing a single line of code from memory.</p>
+<!-- VENTURES -->
+<section id="ventures">
+  <div class="wrap">
+    <p class="eyebrow reveal">Current Ventures</p>
+    <h2 class="sec-h reveal">Two bets on the future<br>of trust and real estate.</h2>
+    <p class="sec-p reveal">Built from a decade of watching what doesn't work — and finally having the clarity to build what will.</p>
 
-    <div class="stack-grid">
-      <div class="stack-card glass reveal">
-        <div class="s-icon">🤖</div>
-        <div>
-          <div class="s-role">Intelligence Layer</div>
-          <h4 class="s-name">Claude</h4>
-          <p class="s-desc">Writes, reviews, explains every line. Turns plain English descriptions into working, production-grade applications.</p>
+    <div class="products-grid">
+
+      <div class="prod-card glass pc-s reveal">
+        <div class="prod-icon pi-s">🏗️</div>
+        <div class="prod-label pl-s">Real Estate Sales Management</div>
+        <h3 class="prod-name">UNITS</h3>
+        <div class="prod-tagline">"The simplest tool for an end-to-end customer journey."</div>
+        <p class="prod-desc">After a decade inside a real estate group — watching sales teams struggle with fragmented tools, leaky pipelines, and zero visibility — UNITS is the answer. Purpose-built simplicity for the entire customer journey, from first inquiry to possession.</p>
+        <div class="prod-chips">
+          <span class="pchip pcs">SALES MANAGEMENT</span>
+          <span class="pchip pcs">CUSTOMER JOURNEY</span>
+          <span class="pchip pcs">REAL ESTATE</span>
+          <span class="pchip pcs">SIMPLICITY FIRST</span>
         </div>
       </div>
-      <div class="stack-card glass reveal">
-        <div class="s-icon">🐙</div>
-        <div>
-          <div class="s-role">Memory Layer</div>
-          <h4 class="s-name">GitHub</h4>
-          <p class="s-desc">Unlimited undo history for the entire codebase. Branch freely, experiment boldly, always return to safety.</p>
+
+      <div class="prod-card glass pc-a reveal">
+        <div class="prod-icon pi-a">🔗</div>
+        <div class="prod-label pl-a">Universal Business Credentials</div>
+        <h3 class="prod-name">UNIVEN</h3>
+        <div class="prod-tagline">"Redefining trust in the Connected Business Ecosystem."</div>
+        <p class="prod-desc">In a world of connected businesses, trust is still broken. Every B2B interaction starts with the same question — "Can I trust this entity?" UNIVEN builds the infrastructure to answer that question once, permanently, and verifiably.</p>
+        <div class="prod-chips">
+          <span class="pchip pca">BUSINESS IDENTITY</span>
+          <span class="pchip pca">TRUST INFRASTRUCTURE</span>
+          <span class="pchip pca">B2B ECOSYSTEM</span>
+          <span class="pchip pca">DIGITAL CREDENTIALS</span>
         </div>
       </div>
-      <div class="stack-card glass reveal">
-        <div class="s-icon">▲</div>
-        <div>
-          <div class="s-role">Deployment Layer</div>
-          <h4 class="s-name">Vercel</h4>
-          <p class="s-desc">Watches GitHub and auto-publishes every update. Push code → live in 60 seconds. No servers, ever.</p>
-        </div>
-      </div>
-      <div class="stack-card glass reveal">
-        <div class="s-icon">🗄️</div>
-        <div>
-          <div class="s-role">Data Layer</div>
-          <h4 class="s-name">Supabase</h4>
-          <p class="s-desc">The database behind every dynamic interaction. Without it nothing persists. With it, you have a real product.</p>
-        </div>
-      </div>
+
     </div>
+  </div>
+</section>
 
-    <div class="pipeline">
-      <div class="p-node">
-        <div class="p-icon">💬</div>
-        <div class="p-lbl">Describe</div>
-        <div class="p-sub">in plain English</div>
+<!-- PLAYGROUND / THINKING -->
+<section id="thinking" class="playground">
+  <div class="wrap">
+    <div class="playground-inner">
+      <div>
+        <p class="eyebrow reveal">The Learning Lab</p>
+        <h2 class="sec-h reveal">AI as a thinking partner,<br>not a building tool.</h2>
+        <p class="sec-p reveal" style="margin-bottom:20px">My actual products are built by experienced engineers. But I run a separate playground — a space where I explore ideas, test intuitions, and reflect on what's possible. What I learn there, I bring back to the real work. Domain knowledge remains the moat. The playground sharpens the thinking.</p>
+        <p class="sec-p reveal" style="font-style:italic;color:var(--sage)">"I reflect on my ideas and thoughts here. So far, I have implemented most of the things I learnt from here — into the real world."</p>
       </div>
-      <div class="p-arr">→</div>
-      <div class="p-node">
-        <div class="p-icon">🤖</div>
-        <div class="p-lbl">Claude</div>
-        <div class="p-sub">writes code</div>
-      </div>
-      <div class="p-arr">→</div>
-      <div class="p-node">
-        <div class="p-icon">🐙</div>
-        <div class="p-lbl">GitHub</div>
-        <div class="p-sub">saves version</div>
-      </div>
-      <div class="p-arr">→</div>
-      <div class="p-node">
-        <div class="p-icon">▲</div>
-        <div class="p-lbl">Vercel</div>
-        <div class="p-sub">publishes live</div>
-      </div>
-      <div class="p-arr">→</div>
-      <div class="p-node">
-        <div class="p-icon">🌍</div>
-        <div class="p-lbl">Live URL</div>
-        <div class="p-sub">world can see it</div>
+
+      <div class="pg-visual glass reveal">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;margin-bottom:20px;color:var(--text)">The Reflection Loop</div>
+        <div class="pg-flow">
+          <div class="pg-step">
+            <div class="pg-step-icon">💡</div>
+            <div>
+              <div class="pg-step-text">Idea or problem emerges</div>
+              <div class="pg-step-sub">from real-world work</div>
+            </div>
+          </div>
+          <div class="pg-arrow">↓</div>
+          <div class="pg-step">
+            <div class="pg-step-icon">🤖</div>
+            <div>
+              <div class="pg-step-text">Explore it with AI</div>
+              <div class="pg-step-sub">Claude as thinking partner</div>
+            </div>
+          </div>
+          <div class="pg-arrow">↓</div>
+          <div class="pg-step">
+            <div class="pg-step-icon">🔍</div>
+            <div>
+              <div class="pg-step-text">Test the intuition</div>
+              <div class="pg-step-sub">prototype, reflect, validate</div>
+            </div>
+          </div>
+          <div class="pg-arrow">↓</div>
+          <div class="pg-step">
+            <div class="pg-step-icon">🏗️</div>
+            <div>
+              <div class="pg-step-text">Apply to real products</div>
+              <div class="pg-step-sub">UNITS · UNIVEN · beyond</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- LESSONS -->
-<section id="lessons">
-  <div class="container">
-    <p class="eyebrow reveal">What Four Failures Taught Me</p>
-    <h2 class="sec-title reveal">Hard-earned lessons.<br>Freely shared.</h2>
+<!-- WHAT DRIVES ME -->
+<section>
+  <div class="wrap">
+    <p class="eyebrow reveal">What Drives Me</p>
+    <h2 class="sec-h reveal">Beyond the résumé.</h2>
 
-    <div class="lessons-grid">
-      <div class="lesson-card glass reveal">
-        <div class="l-num">01</div>
-        <h3 class="l-title">Speed beats perfection every time</h3>
-        <p class="l-desc">The ventures that failed weren't bad ideas. They were slow ones. By the time they were "ready," the market had moved. Now I ship in days, not months.</p>
+    <div class="drives-grid">
+      <div class="drive-card glass reveal">
+        <span class="drive-icon">🧠</span>
+        <h3 class="drive-title">Chasing the Why</h3>
+        <p class="drive-desc">Every system, process, and decision has a reason behind it. I can't rest until I understand it. That's not a quirk — it's how deep knowledge actually gets built.</p>
       </div>
-      <div class="lesson-card glass reveal">
-        <div class="l-num">02</div>
-        <h3 class="l-title">The tool gap is gone</h3>
-        <p class="l-desc">For 40 years, code was a moat. You either had engineers or you didn't build. AI collapsed that moat in 18 months. The advantage is now knowing what to build.</p>
+      <div class="drive-card glass reveal">
+        <span class="drive-icon">🤝</span>
+        <h3 class="drive-title">Technology as Leverage</h3>
+        <p class="drive-desc">Not a coder. Not trying to be. But technology is the multiplier on everything else — and understanding it well enough to direct it is the real skill.</p>
       </div>
-      <div class="lesson-card glass reveal">
-        <div class="l-num">03</div>
-        <h3 class="l-title">Constraints are a feature</h3>
-        <p class="l-desc">Building lean forces ruthless prioritisation. Every feature must justify itself. That discipline produces better products than unlimited engineering budgets.</p>
+      <div class="drive-card glass reveal">
+        <span class="drive-icon">🌱</span>
+        <h3 class="drive-title">Optimism as Strategy</h3>
+        <p class="drive-desc">The market is big enough. The problems are real enough. And the tools have never been better. Optimism, here, is not naïve — it's calculated.</p>
       </div>
-      <div class="lesson-card glass reveal">
-        <div class="l-num">04</div>
-        <h3 class="l-title">Domain knowledge is the real moat</h3>
-        <p class="l-desc">Anyone can prompt Claude. What you can't replicate is 20 years of understanding how real estate actually works — the workflows, pain points, trust dynamics.</p>
+      <div class="drive-card glass reveal">
+        <span class="drive-icon">🏏</span>
+        <h3 class="drive-title">Sports, Forever</h3>
+        <p class="drive-desc">A lifelong student of sport. The discipline, the strategy, the team dynamics — there's more useful business thinking in sport than in most MBA programmes.</p>
       </div>
-      <div class="lesson-card glass reveal">
-        <div class="l-num">05</div>
-        <h3 class="l-title">Failure is expensive R&D</h3>
-        <p class="l-desc">Each venture funded the knowledge base of the next. The ROI wasn't in revenue — it was in the pattern recognition that made attempt #5 possible.</p>
+      <div class="drive-card glass reveal">
+        <span class="drive-icon">🎬</span>
+        <h3 class="drive-title">Cinema & Music</h3>
+        <p class="drive-desc">Cinema for vivid shades of life and constant learning. Music to unwind. Both are reminders that the best storytelling is always rooted in truth.</p>
       </div>
-      <div class="lesson-card glass reveal">
-        <div class="l-num">06</div>
-        <h3 class="l-title">Build in public, learn in public</h3>
-        <p class="l-desc">This page is day-one proof. Sharing the journey — including uncertainty, experiments, and the stack — creates more trust than any polished pitch deck ever could.</p>
+      <div class="drive-card glass reveal">
+        <span class="drive-icon">🌍</span>
+        <h3 class="drive-title">Public Good</h3>
+        <p class="drive-desc">Always open to contributing to something larger. Ideas that create trust, efficiency, and clarity in the real economy — that's where the energy goes.</p>
       </div>
     </div>
   </div>
 </section>
+
+<!-- CONNECT -->
+<div id="connect" class="coffee-section">
+  <div class="wrap">
+    <div class="coffee-card glass reveal">
+      <div>
+        <h2 class="coffee-title">Let's meet over<br><em>chai or coffee.</em></h2>
+        <p class="coffee-desc">Open to interesting conversations, constructive debates, new ideas, and collaboration opportunities that contribute to the public good. If you have a problem worth solving or a perspective worth sharing — reach out.</p>
+      </div>
+      <div class="coffee-contact">
+        <a href="mailto:navinoswalz@gmail.com" class="contact-item">
+          📧 navinoswalz@gmail.com
+        </a>
+        <a href="https://www.linkedin.com/in/namoswal/" target="_blank" class="contact-item">
+          💼 LinkedIn Profile ↗
+        </a>
+        <a href="https://univen.co" target="_blank" class="contact-item">
+          🔗 univen.co ↗
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- FOOTER -->
 <footer>
-  <div class="container">
+  <div class="wrap">
     <div class="footer-inner">
-      <div class="footer-brand">Navin <span>Oswal</span></div>
+      <div class="footer-name">Navin <span>Oswal</span></div>
       <ul class="footer-links">
-        <li><a href="https://basalos.com" target="_blank">BasalOS</a></li>
-        <li><a href="https://univen.co" target="_blank">UNIVEN</a></li>
+        <li><a href="#journey">Journey</a></li>
+        <li><a href="#ventures">UNITS & UNIVEN</a></li>
         <li><a href="https://www.linkedin.com/in/namoswal/" target="_blank">LinkedIn</a></li>
       </ul>
-      <div class="footer-copy">Built with Claude · Vercel · GitHub</div>
+      <div class="footer-tag">Curious · Optimist · Builder</div>
     </div>
   </div>
 </footer>
 
 <script>
   const obs = new IntersectionObserver((entries) => {
-    entries.forEach((el, i) => {
-      if (el.isIntersecting) {
-        setTimeout(() => el.target.classList.add('visible'), i * 70);
-      }
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) setTimeout(() => e.target.classList.add('on'), i * 65);
     });
   }, { threshold: 0.1 });
 
