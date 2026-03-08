@@ -1,594 +1,733 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Building Without Code — Navin's Stack</title>
+  <title>Navin Oswal — Building the Future, Attempt by Attempt</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --ink: #0d0c0a;
-      --paper: #f5f0e8;
-      --amber: #e8a020;
-      --amber-light: #f5c84a;
-      --rust: #c4440a;
-      --sage: #3a5a40;
-      --muted: #8a8070;
-      --card-bg: #1a1814;
-      --card-border: #2e2b25;
+      --indigo: #4f46e5;
+      --indigo-light: #818cf8;
+      --teal: #0d9488;
+      --teal-light: #5eead4;
+      --coral: #f97316;
+      --text: #0f172a;
+      --text-mid: #334155;
+      --text-muted: #64748b;
+      --glass-bg: rgba(255,255,255,0.55);
+      --glass-border: rgba(255,255,255,0.85);
+      --glass-shadow: 0 8px 32px rgba(99,102,241,0.10);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--ink);
-      color: var(--paper);
-      font-family: 'Syne', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text);
       overflow-x: hidden;
-      cursor: default;
+      background: #f0f7ff;
+      min-height: 100vh;
     }
 
-    /* ── GRAIN OVERLAY ── */
-    body::before {
-      content: '';
+    .bg-canvas {
       position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-      opacity: 0.04;
-      pointer-events: none;
-      z-index: 999;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      position: relative;
+      z-index: 0;
       overflow: hidden;
     }
 
-    .hero-left {
-      padding: 80px 60px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+    .bg-canvas::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 10%, rgba(165,180,252,0.45) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 85% 15%, rgba(94,234,212,0.35) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 60% at 50% 95%, rgba(251,207,232,0.4) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 90% 70%, rgba(165,243,252,0.3) 0%, transparent 50%),
+        linear-gradient(160deg, #e0f2fe 0%, #f0fdf4 40%, #fdf4ff 100%);
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.5;
+      animation: blobFloat ease-in-out infinite alternate;
+    }
+
+    .blob-1 { width: 500px; height: 500px; background: rgba(129,140,248,0.3); top: -100px; left: -100px; animation-duration: 8s; }
+    .blob-2 { width: 400px; height: 400px; background: rgba(94,234,212,0.25); top: 20%; right: -80px; animation-duration: 11s; animation-delay: -3s; }
+    .blob-3 { width: 350px; height: 350px; background: rgba(251,207,232,0.35); bottom: 10%; left: 20%; animation-duration: 9s; animation-delay: -5s; }
+    .blob-4 { width: 300px; height: 300px; background: rgba(253,186,116,0.2); bottom: 30%; right: 15%; animation-duration: 13s; animation-delay: -2s; }
+
+    @keyframes blobFloat {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(30px,20px) scale(1.05); }
+    }
+
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      box-shadow: var(--glass-shadow);
+    }
+
+    .glass-sm {
+      background: rgba(255,255,255,0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.92);
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.08);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px;
       position: relative;
       z-index: 2;
     }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.65);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255,255,255,0.75);
+    }
+
+    .nav-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--text);
+    }
+
+    .nav-brand span { color: var(--indigo); }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--indigo); }
+
+    .nav-cta {
+      background: var(--indigo) !important;
+      color: white !important;
+      padding: 8px 20px !important;
+      border-radius: 100px;
+      font-weight: 600 !important;
+      transition: all 0.2s !important;
+    }
+
+    .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(79,70,229,0.3); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 88px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 56px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 18px 7px 10px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--teal);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.2s ease forwards;
+    }
+
+    .live-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: dotPulse 2s ease infinite;
+    }
+
+    @keyframes dotPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(13,148,136,0.5); }
+      50% { box-shadow: 0 0 0 6px rgba(13,148,136,0); }
+    }
+
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(52px, 5.5vw, 80px);
+      line-height: 1.0;
+      letter-spacing: -0.025em;
+      margin-bottom: 22px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.35s ease forwards;
+    }
+
+    .hero-name .accent { color: var(--indigo); font-style: italic; }
+
+    .hero-subtitle {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text-mid);
+      margin-bottom: 40px;
+      max-width: 480px;
+      font-weight: 400;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.5s ease forwards;
+    }
+
+    .hero-subtitle strong { color: var(--text); font-weight: 600; }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.65s ease forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--indigo);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s;
+      box-shadow: 0 4px 20px rgba(79,70,229,0.3);
+    }
+
+    .btn-primary:hover { background: #4338ca; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(79,70,229,0.4); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-mid);
+      padding: 14px 24px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(255,255,255,0.92);
+      transition: all 0.25s;
+    }
+
+    .btn-ghost:hover { background: rgba(255,255,255,0.9); transform: translateY(-1px); }
+
+    /* HERO CARD */
+    .hero-card-area {
+      opacity: 0;
+      animation: fadeIn 1s 0.8s ease forwards;
+      position: relative;
+    }
+
+    .profile-glass {
+      padding: 36px;
+      text-align: center;
+    }
+
+    .avatar-wrap {
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--indigo-light), var(--teal-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-family: 'Playfair Display', serif;
+      font-size: 40px;
+      color: white;
+      box-shadow: 0 8px 32px rgba(79,70,229,0.25);
+    }
+
+    .profile-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .profile-title {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .profile-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      justify-content: center;
+      margin-bottom: 22px;
+    }
+
+    .tag {
+      padding: 5px 12px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .tag-i { background: rgba(79,70,229,0.1); color: var(--indigo); }
+    .tag-t { background: rgba(13,148,136,0.1); color: var(--teal); }
+    .tag-c { background: rgba(249,115,22,0.1); color: var(--coral); }
+
+    .attempt-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 16px 20px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(79,70,229,0.07), rgba(13,148,136,0.07));
+      border: 1px solid rgba(79,70,229,0.12);
+    }
+
+    .attempt-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      color: var(--indigo);
+      line-height: 1;
+    }
+
+    .attempt-lbl {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      text-align: left;
+    }
+
+    .attempt-lbl strong { color: var(--text); display: block; font-size: 13px; }
+
+    .float-card {
+      position: absolute;
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      animation: cardFloat ease-in-out infinite alternate;
+    }
+
+    .fc1 { top: -18px; right: -16px; color: var(--teal); animation-duration: 3s; }
+    .fc2 { bottom: 36px; left: -24px; color: var(--indigo); animation-duration: 4s; animation-delay: -1.5s; }
+
+    @keyframes cardFloat {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-10px); }
+    }
+
+    /* STATS */
+    .stats-row { padding: 0 0 80px; position: relative; z-index: 2; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .stat-card {
+      padding: 28px 20px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(99,102,241,0.14); }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      color: var(--indigo);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-lbl {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    /* SECTIONS */
+    section { padding: 80px 0; position: relative; z-index: 2; }
 
     .eyebrow {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
       letter-spacing: 0.25em;
-      color: var(--amber);
+      color: var(--teal);
       text-transform: uppercase;
-      margin-bottom: 32px;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.2s ease forwards;
-    }
-
-    .hero-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(52px, 6vw, 88px);
-      line-height: 1.0;
-      margin-bottom: 32px;
-      opacity: 0;
-      animation: fadeUp 0.9s 0.4s ease forwards;
-    }
-
-    .hero-title em {
-      font-style: italic;
-      color: var(--amber);
-    }
-
-    .hero-desc {
-      font-size: 17px;
-      line-height: 1.7;
-      color: var(--muted);
-      max-width: 440px;
-      margin-bottom: 48px;
-      opacity: 0;
-      animation: fadeUp 0.9s 0.6s ease forwards;
-    }
-
-    .hero-desc strong { color: var(--paper); font-weight: 700; }
-
-    .attempt-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background: rgba(232, 160, 32, 0.1);
-      border: 1px solid rgba(232, 160, 32, 0.3);
-      border-radius: 4px;
-      padding: 12px 20px;
-      opacity: 0;
-      animation: fadeUp 0.9s 0.8s ease forwards;
-    }
-
-    .attempt-badge .number {
-      font-family: 'DM Serif Display', serif;
-      font-size: 36px;
-      color: var(--amber);
-      line-height: 1;
-    }
-
-    .attempt-badge .label {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.4;
-    }
-
-    .attempt-badge .label strong { color: var(--paper); display: block; }
-
-    /* ── HERO RIGHT ── */
-    .hero-right {
-      position: relative;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 12px;
+    }
+
+    .eyebrow::before {
+      content: '';
+      width: 28px; height: 2px;
+      background: var(--teal);
+      border-radius: 2px;
+    }
+
+    .sec-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 3.5vw, 52px);
+      line-height: 1.12;
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .sec-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 520px;
+    }
+
+    /* PRODUCTS */
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 52px;
+    }
+
+    .product-card {
+      padding: 40px 36px;
+      transition: all 0.35s;
+      position: relative;
       overflow: hidden;
     }
 
-    .hero-right::before {
+    .product-card::after {
       content: '';
       position: absolute;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(232,160,32,0.15) 0%, transparent 70%);
-      animation: pulse 4s ease-in-out infinite alternate;
-    }
-
-    .orbit-container {
-      position: relative;
-      width: 380px;
-      height: 380px;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 24px 24px 0 0;
       opacity: 0;
-      animation: fadeIn 1.2s 1s ease forwards;
+      transition: opacity 0.3s;
     }
 
-    .orbit-center {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 90px; height: 90px;
-      background: var(--amber);
-      border-radius: 50%;
+    .pc-indigo::after { background: linear-gradient(90deg, var(--indigo), var(--indigo-light)); }
+    .pc-teal::after { background: linear-gradient(90deg, var(--teal), var(--teal-light)); }
+    .product-card:hover { transform: translateY(-6px); box-shadow: 0 24px 56px rgba(99,102,241,0.12); }
+    .product-card:hover::after { opacity: 1; }
+
+    .prod-icon {
+      width: 56px; height: 56px;
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'DM Serif Display', serif;
-      font-size: 11px;
-      color: var(--ink);
-      font-weight: bold;
-      text-align: center;
-      line-height: 1.3;
+      font-size: 26px;
+      margin-bottom: 22px;
+    }
+
+    .pi-i { background: rgba(79,70,229,0.1); }
+    .pi-t { background: rgba(13,148,136,0.1); }
+
+    .prod-tagline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--indigo);
+      margin-bottom: 10px;
+    }
+
+    .prod-tagline.teal { color: var(--teal); }
+
+    .prod-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      margin-bottom: 12px;
+    }
+
+    .prod-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .prod-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 18px;
+    }
+
+    .chip {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+    }
+
+    .chip-i { background: rgba(79,70,229,0.08); color: var(--indigo); }
+    .chip-t { background: rgba(13,148,136,0.08); color: var(--teal); }
+
+    /* QUOTE */
+    .quote-sec {
+      padding: 60px 0;
+      position: relative;
       z-index: 2;
-      box-shadow: 0 0 60px rgba(232,160,32,0.4);
     }
 
-    .orbit-ring {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      border: 1px dashed rgba(232, 160, 32, 0.2);
-      animation: spin linear infinite;
+    .quote-card {
+      padding: 60px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(79,70,229,0.06), rgba(13,148,136,0.06));
+      border: 1px solid rgba(79,70,229,0.12);
     }
-    .orbit-ring:nth-child(2) { inset: 30px; animation-duration: 20s; }
-    .orbit-ring:nth-child(3) { inset: 70px; animation-duration: 35s; animation-direction: reverse; }
-    .orbit-ring:nth-child(4) { inset: 110px; animation-duration: 50s; }
 
-    .orbit-node {
-      position: absolute;
+    .qmark {
+      font-family: 'Playfair Display', serif;
+      font-size: 120px;
+      line-height: 0.6;
+      color: rgba(79,70,229,0.12);
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .qtext {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 3vw, 34px);
+      line-height: 1.45;
+      max-width: 720px;
+      margin: 0 auto 24px;
+      font-style: italic;
+    }
+
+    .qtext em { color: var(--indigo); font-style: normal; }
+
+    .qattr {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+    }
+
+    /* STACK */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 52px;
+    }
+
+    .stack-card {
+      padding: 28px;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      transition: all 0.3s;
+    }
+
+    .stack-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(99,102,241,0.1); }
+
+    .s-icon {
+      width: 48px; height: 48px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, rgba(79,70,229,0.1), rgba(13,148,136,0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .s-role {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: var(--teal);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .s-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .s-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* PIPELINE */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-top: 52px;
+      overflow-x: auto;
+      padding: 12px 0;
+    }
+
+    .p-node {
+      flex: 1;
+      min-width: 110px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
-      transform: translate(-50%, -50%);
+      gap: 10px;
+      padding: 20px 12px;
+      border-radius: 18px;
+      transition: all 0.3s;
     }
 
-    .orbit-node .icon-wrap {
-      width: 56px; height: 56px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
+    .p-node:hover { background: rgba(255,255,255,0.65); box-shadow: 0 8px 24px rgba(99,102,241,0.1); }
+
+    .p-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 24px;
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.95);
+      box-shadow: 0 4px 14px rgba(99,102,241,0.1);
       transition: all 0.3s;
     }
 
-    .orbit-node:hover .icon-wrap {
-      border-color: var(--amber);
-      background: rgba(232,160,32,0.1);
-      transform: scale(1.1);
-    }
+    .p-node:hover .p-icon { transform: scale(1.08); box-shadow: 0 8px 20px rgba(79,70,229,0.2); }
 
-    .orbit-node .node-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
+    .p-lbl { font-size: 11px; font-weight: 600; color: var(--text-mid); text-align: center; }
+    .p-sub { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-muted); text-align: center; }
 
-    /* Node positions around circle */
-    .node-1 { top: 5%; left: 50%; }
-    .node-2 { top: 50%; left: 95%; }
-    .node-3 { top: 95%; left: 50%; }
-    .node-4 { top: 50%; left: 5%; }
-
-    /* ── SCROLL CUE ── */
-    .scroll-cue {
-      position: absolute;
-      bottom: 40px;
-      left: 60px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      opacity: 0;
-      animation: fadeUp 0.8s 1.4s ease forwards;
-    }
-
-    .scroll-line {
-      width: 40px;
-      height: 1px;
-      background: var(--amber);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .scroll-line::after {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: var(--paper);
-      animation: scanline 2s ease-in-out infinite;
-    }
-
-    .scroll-text {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      color: var(--muted);
-      text-transform: uppercase;
-    }
-
-    /* ── SECTION: JOURNEY ── */
-    .section {
-      padding: 120px 80px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.3em;
-      color: var(--amber);
-      text-transform: uppercase;
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .section-tag::before {
-      content: '';
-      display: block;
-      width: 32px;
-      height: 1px;
-      background: var(--amber);
-    }
-
-    .section-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(36px, 4vw, 60px);
-      line-height: 1.1;
-      margin-bottom: 24px;
-    }
-
-    /* ── TIMELINE ── */
-    .timeline {
-      margin-top: 80px;
-      position: relative;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 24px;
-      top: 0; bottom: 0;
-      width: 1px;
-      background: linear-gradient(to bottom, var(--amber), transparent);
-    }
-
-    .timeline-item {
-      display: grid;
-      grid-template-columns: 60px 1fr;
-      gap: 32px;
-      margin-bottom: 56px;
-      opacity: 0;
-      transform: translateX(-20px);
-      transition: all 0.6s ease;
-    }
-
-    .timeline-item.visible {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .timeline-dot {
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      border: 1px solid var(--card-border);
-      background: var(--card-bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .p-arr {
+      color: rgba(79,70,229,0.35);
       font-size: 18px;
       flex-shrink: 0;
-      margin-top: 4px;
-      position: relative;
-      z-index: 1;
+      animation: arrPulse 2.5s ease infinite;
     }
 
-    .timeline-dot.amber { border-color: var(--amber); box-shadow: 0 0 20px rgba(232,160,32,0.3); }
-
-    .timeline-content h3 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 26px;
-      margin-bottom: 10px;
-      line-height: 1.2;
+    @keyframes arrPulse {
+      0%,100% { opacity: 0.35; transform: translateX(0); }
+      50% { opacity: 0.7; transform: translateX(4px); }
     }
 
-    .timeline-content p {
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--muted);
-      max-width: 560px;
-    }
-
-    .timeline-content p strong { color: var(--paper); }
-
-    .timeline-attempt {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--rust);
-      letter-spacing: 0.2em;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-
-    /* ── STACK SECTION ── */
-    .stack-section {
-      padding: 120px 80px;
-      background: linear-gradient(180deg, transparent, rgba(232,160,32,0.03), transparent);
-    }
-
-    .stack-grid {
+    /* LESSONS */
+    .lessons-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 2px;
-      margin-top: 64px;
-      max-width: 1200px;
-      margin-left: auto;
-      margin-right: auto;
-      border: 1px solid var(--card-border);
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 52px;
     }
 
-    .stack-card {
-      background: var(--card-bg);
-      padding: 48px 40px;
-      border: 1px solid transparent;
-      transition: all 0.4s ease;
-      position: relative;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease, border 0.4s ease, background 0.4s ease;
-    }
-
-    .stack-card.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .stack-card:hover {
-      background: rgba(232,160,32,0.05);
-      border-color: rgba(232,160,32,0.2);
-      z-index: 1;
-    }
-
-    .stack-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 3px; height: 0;
-      background: var(--amber);
-      transition: height 0.4s ease;
-    }
-
-    .stack-card:hover::before { height: 100%; }
-
-    .stack-icon {
-      font-size: 40px;
-      margin-bottom: 24px;
-      display: block;
-    }
-
-    .stack-role {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--amber);
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .stack-name {
-      font-family: 'DM Serif Display', serif;
-      font-size: 32px;
-      margin-bottom: 16px;
-      line-height: 1.1;
-    }
-
-    .stack-desc {
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--muted);
-    }
-
-    .stack-desc strong { color: var(--paper); }
-
-    .stack-flow {
-      position: absolute;
-      bottom: 24px; right: 24px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: rgba(232,160,32,0.3);
-    }
-
-    /* ── PHILOSOPHY SECTION ── */
-    .philosophy {
-      padding: 120px 80px;
-      max-width: 1200px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .quote-block {
-      margin: 80px auto;
-      max-width: 800px;
-      position: relative;
-      padding: 0 60px;
-    }
-
-    .quote-block::before, .quote-block::after {
-      font-family: 'DM Serif Display', serif;
-      font-size: 120px;
-      color: rgba(232,160,32,0.15);
-      position: absolute;
-      line-height: 1;
-    }
-
-    .quote-block::before { content: '\201C'; top: -20px; left: 0; }
-    .quote-block::after { content: '\201D'; bottom: -60px; right: 0; }
-
-    .quote-text {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(24px, 3vw, 36px);
-      line-height: 1.4;
-      color: var(--paper);
-      font-style: italic;
-    }
-
-    .quote-text em { color: var(--amber); font-style: normal; }
-
-    /* ── PIPELINE SECTION ── */
-    .pipeline {
-      padding: 80px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .pipeline-flow {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      margin-top: 64px;
-      overflow-x: auto;
-      padding-bottom: 16px;
-    }
-
-    .pipe-step {
-      flex: 1;
-      min-width: 140px;
-      text-align: center;
-      padding: 32px 16px;
-      position: relative;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards;
-    }
-
-    .pipe-step:nth-child(1) { animation-delay: 0.1s; }
-    .pipe-step:nth-child(3) { animation-delay: 0.2s; }
-    .pipe-step:nth-child(5) { animation-delay: 0.3s; }
-    .pipe-step:nth-child(7) { animation-delay: 0.4s; }
-    .pipe-step:nth-child(9) { animation-delay: 0.5s; }
-
-    .pipe-icon {
-      width: 64px; height: 64px;
-      border-radius: 16px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      margin: 0 auto 16px;
+    .lesson-card {
+      padding: 32px 26px;
       transition: all 0.3s;
     }
 
-    .pipe-step:hover .pipe-icon {
-      border-color: var(--amber);
-      box-shadow: 0 0 30px rgba(232,160,32,0.2);
-      transform: translateY(-4px);
+    .lesson-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(99,102,241,0.1); }
+
+    .l-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 44px;
+      color: rgba(79,70,229,0.14);
+      line-height: 1;
+      margin-bottom: 10px;
     }
 
-    .pipe-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      line-height: 1.5;
+    .l-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      margin-bottom: 10px;
     }
 
-    .pipe-arrow {
-      font-size: 20px;
-      color: rgba(232,160,32,0.4);
-      padding: 0 4px;
-      animation: arrowPulse 2s ease-in-out infinite;
-    }
+    .l-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
 
-    /* ── FOOTER ── */
+    /* FOOTER */
     footer {
-      border-top: 1px solid var(--card-border);
-      padding: 60px 80px;
+      border-top: 1px solid rgba(79,70,229,0.1);
+      padding: 48px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer-inner {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .footer-brand {
-      font-family: 'DM Serif Display', serif;
-      font-size: 22px;
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
     }
 
-    .footer-brand span { color: var(--amber); }
+    .footer-brand span { color: var(--indigo); }
 
-    .footer-meta {
+    .footer-links { display: flex; gap: 24px; list-style: none; }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--indigo); }
+
+    .footer-copy {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
-      color: var(--muted);
-      text-align: right;
-      line-height: 1.8;
+      color: var(--text-muted);
     }
 
-    .footer-meta a { color: var(--amber); text-decoration: none; }
-    .footer-meta a:hover { text-decoration: underline; }
-
-    /* ── ANIMATIONS ── */
+    /* ANIMATIONS */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(24px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
@@ -597,283 +736,319 @@
       to   { opacity: 1; }
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
     }
 
-    @keyframes pulse {
-      from { transform: scale(0.95); opacity: 0.8; }
-      to   { transform: scale(1.05); opacity: 1; }
-    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
-    @keyframes scanline {
-      0% { left: -100%; }
-      100% { left: 200%; }
-    }
-
-    @keyframes arrowPulse {
-      0%, 100% { opacity: 0.4; transform: translateX(0); }
-      50% { opacity: 0.8; transform: translateX(4px); }
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      .hero { grid-template-columns: 1fr; }
-      .hero-right { display: none; }
-      .hero-left { padding: 80px 32px; }
-      .section, .pipeline, .philosophy { padding: 80px 32px; }
-      .stack-section { padding: 80px 32px; }
-      .stack-grid { grid-template-columns: 1fr; }
-      footer { flex-direction: column; gap: 24px; text-align: center; }
-      .footer-meta { text-align: center; }
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-card-area { display: none; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .products-grid, .stack-grid, .lessons-grid { grid-template-columns: 1fr; }
+      nav .nav-links { display: none; }
+      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+      .quote-card { padding: 40px 24px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ══ HERO ══ -->
-  <section class="hero">
-    <div class="hero-left">
-      <p class="eyebrow">// founder · builder · learner</p>
+<div class="bg-canvas">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+</div>
 
-      <h1 class="hero-title">
-        Building<br>
-        without<br>
-        <em>code.</em>
-      </h1>
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Navin <span>Oswal</span></div>
+  <ul class="nav-links">
+    <li><a href="#products">Products</a></li>
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#lessons">Lessons</a></li>
+    <li><a href="https://www.linkedin.com/in/namoswal/" target="_blank" class="nav-cta">LinkedIn ↗</a></li>
+  </ul>
+</nav>
 
-      <p class="hero-desc">
-        What you're looking at is <strong>a live proof of concept</strong> — built by a non-coder, 
-        hosted on the internet, using nothing but the right tools stitched together with intent.
-        No CS degree. No engineering team. <strong>Just curiosity and the right stack.</strong>
-      </p>
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="glass-sm hero-tag">
+          <div class="live-dot"></div>
+          Currently building — Attempt #5
+        </div>
 
-      <div class="attempt-badge">
-        <div class="number">5th</div>
-        <div class="label">
-          <strong>Attempt</strong>
-          Each failure taught what the next one needed.
+        <h1 class="hero-name">
+          Founder.<br>
+          Builder.<br>
+          <span class="accent">Non-coder.</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          I've failed <strong>four times</strong> building startups. Each attempt taught me what the next one needed. On my fifth, I discovered something radical — <strong>you don't need to code to build production software.</strong>
+        </p>
+
+        <div class="hero-actions">
+          <a href="#products" class="btn-primary">See what I'm building →</a>
+          <a href="https://www.linkedin.com/in/namoswal/" target="_blank" class="btn-ghost">LinkedIn ↗</a>
         </div>
       </div>
 
-      <div class="scroll-cue">
-        <div class="scroll-line"></div>
-        <span class="scroll-text">Scroll to explore</span>
+      <div class="hero-card-area">
+        <div class="float-card fc1 glass-sm">🚀 BasalOS is live</div>
+        <div class="float-card fc2 glass-sm">🤖 AI-first builder</div>
+        <div class="profile-glass glass">
+          <div class="avatar-wrap">N</div>
+          <div class="profile-name">Navin Oswal</div>
+          <div class="profile-title">Techno-Functional Founder · Mumbai, India</div>
+          <div class="profile-tags">
+            <span class="tag tag-i">Real Estate Tech</span>
+            <span class="tag tag-t">Digital KYC</span>
+            <span class="tag tag-c">No-Code / AI</span>
+            <span class="tag tag-i">Product Strategy</span>
+          </div>
+          <div class="attempt-box">
+            <div class="attempt-num">5<sup style="font-size:16px;color:var(--text-muted)">th</sup></div>
+            <div class="attempt-lbl">
+              <strong>Venture Attempt</strong>
+              Four lessons in. Still going.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="hero-right">
-      <div class="orbit-container">
-        <div class="orbit-ring"></div>
-        <div class="orbit-ring"></div>
-        <div class="orbit-ring"></div>
+<!-- STATS -->
+<div class="stats-row">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card glass reveal">
+        <div class="stat-num">5<span style="font-size:20px">th</span></div>
+        <div class="stat-lbl">Venture<br>Attempt</div>
+      </div>
+      <div class="stat-card glass reveal">
+        <div class="stat-num">7+</div>
+        <div class="stat-lbl">Modules in<br>BasalOS</div>
+      </div>
+      <div class="stat-card glass reveal">
+        <div class="stat-num">0</div>
+        <div class="stat-lbl">Lines written<br>manually</div>
+      </div>
+      <div class="stat-card glass reveal">
+        <div class="stat-num">∞</div>
+        <div class="stat-lbl">Iterations<br>ahead</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <div class="orbit-center">The<br>Stack</div>
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="container">
+    <p class="eyebrow reveal">What I'm Building</p>
+    <h2 class="sec-title reveal">Two products.<br>One mission.</h2>
+    <p class="sec-desc reveal">Both solve real problems I've witnessed firsthand — one in real estate, one in identity. Both built lean, fast, and AI-first.</p>
 
-        <div class="orbit-node node-1">
-          <div class="icon-wrap">🤖</div>
-          <span class="node-label">Claude</span>
+    <div class="products-grid">
+      <div class="product-card glass pc-indigo reveal">
+        <div class="prod-icon pi-i">🏗️</div>
+        <div class="prod-tagline">Real Estate Operating System</div>
+        <h3 class="prod-name">BasalOS</h3>
+        <p class="prod-desc">A modular OS for the full real estate lifecycle — from lead capture to project delivery. Built for developers and housing societies who need integrated intelligence, not disconnected spreadsheets.</p>
+        <div class="prod-chips">
+          <span class="chip chip-i">UNITS</span>
+          <span class="chip chip-i">BUILDS</span>
+          <span class="chip chip-i">SIGNALS</span>
+          <span class="chip chip-i">SPACES</span>
+          <span class="chip chip-i">STAKES</span>
+          <span class="chip chip-i">BLUEPRINTS</span>
+          <span class="chip chip-i">TASKS</span>
         </div>
-        <div class="orbit-node node-2">
-          <div class="icon-wrap">▲</div>
-          <span class="node-label">Vercel</span>
-        </div>
-        <div class="orbit-node node-3">
-          <div class="icon-wrap">🗄️</div>
-          <span class="node-label">Supabase</span>
-        </div>
-        <div class="orbit-node node-4">
-          <div class="icon-wrap">🐙</div>
-          <span class="node-label">GitHub</span>
+      </div>
+
+      <div class="product-card glass pc-teal reveal">
+        <div class="prod-icon pi-t">🔐</div>
+        <div class="prod-tagline teal">Digital KYC Platform</div>
+        <h3 class="prod-name">UNIVEN</h3>
+        <p class="prod-desc">A digital identity verification platform built for the DPDPA 2023 era. API-first architecture that lets enterprises verify identities without the compliance headache.</p>
+        <div class="prod-chips">
+          <span class="chip chip-t">API-FIRST</span>
+          <span class="chip chip-t">DPDPA 2023</span>
+          <span class="chip chip-t">ENTERPRISE</span>
+          <span class="chip chip-t">COMPLIANCE</span>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ══ JOURNEY ══ -->
-  <section class="section">
-    <p class="section-tag">The Journey</p>
-    <h2 class="section-title">Four failures.<br>One hard-earned lesson.</h2>
-
-    <div class="timeline">
-
-      <div class="timeline-item">
-        <div class="timeline-dot">🌱</div>
-        <div class="timeline-content">
-          <div class="timeline-attempt">Attempt 1–4 · The Pattern</div>
-          <h3>Built the dream. Lost the thread.</h3>
-          <p>
-            Each venture started with the same energy — a real problem, a clear vision, a committed founder. 
-            But without the ability to <strong>build fast, test fast, and learn fast</strong>, 
-            every cycle stretched too long and cost too much before answers arrived.
-          </p>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot">💡</div>
-        <div class="timeline-content">
-          <div class="timeline-attempt">The Shift · 2024</div>
-          <h3>AI changed the equation.</h3>
-          <p>
-            When AI tools became genuinely capable of writing production-grade code, 
-            the 40-year advantage of knowing how to code <strong>compressed into a 40-minute learning curve.</strong> 
-            The barrier wasn't knowledge anymore — it was knowing what to ask for.
-          </p>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot amber">🚀</div>
-        <div class="timeline-content">
-          <div class="timeline-attempt">Now · Attempt 5</div>
-          <h3>Building BasalOS — with AI as the team.</h3>
-          <p>
-            A modular real estate operating system. Built by a non-coder. Using 
-            <strong>Claude for intelligence, GitHub for version control, Vercel for deployment, 
-            and Supabase for data.</strong> The stack you're looking at is the proof.
-          </p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ══ PHILOSOPHY QUOTE ══ -->
-  <div class="philosophy">
-    <div class="quote-block">
-      <p class="quote-text">
+<!-- QUOTE -->
+<div class="quote-sec">
+  <div class="container">
+    <div class="quote-card glass reveal">
+      <span class="qmark">"</span>
+      <p class="qtext">
         The question was never <em>"can I code?"</em><br>
-        It was always <em>"can I build?"</em>
+        It was always <em>"can I build?"</em><br>
+        Turns out, they're not the same question.
       </p>
+      <div class="qattr">— NAVIN OSWAL · FOUNDER · 2025</div>
     </div>
   </div>
+</div>
 
-  <!-- ══ STACK ══ -->
-  <div class="stack-section">
-    <div style="max-width:1200px; margin:0 auto;">
-      <p class="section-tag">The Stack</p>
-      <h2 class="section-title">Four tools.<br>One complete system.</h2>
+<!-- STACK -->
+<section id="stack">
+  <div class="container">
+    <p class="eyebrow reveal">The Stack</p>
+    <h2 class="sec-title reveal">Four tools that make<br>a non-coder dangerous.</h2>
+    <p class="sec-desc reveal">Not a toy setup. A production-capable pipeline built entirely without writing a single line of code from memory.</p>
 
-      <div class="stack-grid">
-
-        <div class="stack-card">
-          <span class="stack-icon">🤖</span>
-          <div class="stack-role">Intelligence Layer</div>
-          <h3 class="stack-name">Claude</h3>
-          <p class="stack-desc">
-            The AI pair programmer that writes, reviews, and explains code. 
-            <strong>You describe what you want in plain English</strong> — Claude turns it into 
-            working, production-grade code. It also explains every decision so you learn as you build.
-          </p>
-          <div class="stack-flow">→ writes code</div>
+    <div class="stack-grid">
+      <div class="stack-card glass reveal">
+        <div class="s-icon">🤖</div>
+        <div>
+          <div class="s-role">Intelligence Layer</div>
+          <h4 class="s-name">Claude</h4>
+          <p class="s-desc">Writes, reviews, explains every line. Turns plain English descriptions into working, production-grade applications.</p>
         </div>
-
-        <div class="stack-card">
-          <span class="stack-icon">🐙</span>
-          <div class="stack-role">Memory Layer</div>
-          <h3 class="stack-name">GitHub</h3>
-          <p class="stack-desc">
-            The version control system that tracks every change to your project. 
-            Think of it as <strong>unlimited undo history for your entire codebase</strong> — 
-            with the ability to branch, experiment, and always return to a working state.
-          </p>
-          <div class="stack-flow">→ stores history</div>
+      </div>
+      <div class="stack-card glass reveal">
+        <div class="s-icon">🐙</div>
+        <div>
+          <div class="s-role">Memory Layer</div>
+          <h4 class="s-name">GitHub</h4>
+          <p class="s-desc">Unlimited undo history for the entire codebase. Branch freely, experiment boldly, always return to safety.</p>
         </div>
-
-        <div class="stack-card">
-          <span class="stack-icon">▲</span>
-          <div class="stack-role">Deployment Layer</div>
-          <h3 class="stack-name">Vercel</h3>
-          <p class="stack-desc">
-            The hosting platform that watches your GitHub and <strong>automatically publishes 
-            every update to the internet</strong> — no manual uploads, no server management. 
-            Push to GitHub. It's live in under a minute.
-          </p>
-          <div class="stack-flow">→ publishes live</div>
+      </div>
+      <div class="stack-card glass reveal">
+        <div class="s-icon">▲</div>
+        <div>
+          <div class="s-role">Deployment Layer</div>
+          <h4 class="s-name">Vercel</h4>
+          <p class="s-desc">Watches GitHub and auto-publishes every update. Push code → live in 60 seconds. No servers, ever.</p>
         </div>
-
-        <div class="stack-card">
-          <span class="stack-icon">🗄️</span>
-          <div class="stack-role">Data Layer</div>
-          <h3 class="stack-name">Supabase</h3>
-          <p class="stack-desc">
-            The database that stores everything dynamic — user data, form submissions, 
-            leads, records. <strong>Without Supabase, nothing persists.</strong> 
-            With it, your app becomes a real product that remembers things across sessions.
-          </p>
-          <div class="stack-flow">→ persists data</div>
+      </div>
+      <div class="stack-card glass reveal">
+        <div class="s-icon">🗄️</div>
+        <div>
+          <div class="s-role">Data Layer</div>
+          <h4 class="s-name">Supabase</h4>
+          <p class="s-desc">The database behind every dynamic interaction. Without it nothing persists. With it, you have a real product.</p>
         </div>
-
       </div>
     </div>
-  </div>
 
-  <!-- ══ PIPELINE ══ -->
-  <div class="pipeline">
-    <p class="section-tag">How it flows</p>
-    <h2 class="section-title">From idea to internet<br>in four steps.</h2>
-
-    <div class="pipeline-flow">
-      <div class="pipe-step">
-        <div class="pipe-icon">💬</div>
-        <div class="pipe-label">You describe<br>what you want</div>
+    <div class="pipeline">
+      <div class="p-node">
+        <div class="p-icon">💬</div>
+        <div class="p-lbl">Describe</div>
+        <div class="p-sub">in plain English</div>
       </div>
-      <div class="pipe-arrow">→</div>
-      <div class="pipe-step">
-        <div class="pipe-icon">🤖</div>
-        <div class="pipe-label">Claude<br>writes the code</div>
+      <div class="p-arr">→</div>
+      <div class="p-node">
+        <div class="p-icon">🤖</div>
+        <div class="p-lbl">Claude</div>
+        <div class="p-sub">writes code</div>
       </div>
-      <div class="pipe-arrow">→</div>
-      <div class="pipe-step">
-        <div class="pipe-icon">🐙</div>
-        <div class="pipe-label">GitHub<br>saves the version</div>
+      <div class="p-arr">→</div>
+      <div class="p-node">
+        <div class="p-icon">🐙</div>
+        <div class="p-lbl">GitHub</div>
+        <div class="p-sub">saves version</div>
       </div>
-      <div class="pipe-arrow">→</div>
-      <div class="pipe-step">
-        <div class="pipe-icon">▲</div>
-        <div class="pipe-label">Vercel<br>publishes it live</div>
+      <div class="p-arr">→</div>
+      <div class="p-node">
+        <div class="p-icon">▲</div>
+        <div class="p-lbl">Vercel</div>
+        <div class="p-sub">publishes live</div>
       </div>
-      <div class="pipe-arrow">→</div>
-      <div class="pipe-step">
-        <div class="pipe-icon">🌍</div>
-        <div class="pipe-label">The world<br>can see it</div>
+      <div class="p-arr">→</div>
+      <div class="p-node">
+        <div class="p-icon">🌍</div>
+        <div class="p-lbl">Live URL</div>
+        <div class="p-sub">world can see it</div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- ══ FOOTER ══ -->
-  <footer>
-    <div class="footer-brand">
-      Navin <span>·</span> Building in public
+<!-- LESSONS -->
+<section id="lessons">
+  <div class="container">
+    <p class="eyebrow reveal">What Four Failures Taught Me</p>
+    <h2 class="sec-title reveal">Hard-earned lessons.<br>Freely shared.</h2>
+
+    <div class="lessons-grid">
+      <div class="lesson-card glass reveal">
+        <div class="l-num">01</div>
+        <h3 class="l-title">Speed beats perfection every time</h3>
+        <p class="l-desc">The ventures that failed weren't bad ideas. They were slow ones. By the time they were "ready," the market had moved. Now I ship in days, not months.</p>
+      </div>
+      <div class="lesson-card glass reveal">
+        <div class="l-num">02</div>
+        <h3 class="l-title">The tool gap is gone</h3>
+        <p class="l-desc">For 40 years, code was a moat. You either had engineers or you didn't build. AI collapsed that moat in 18 months. The advantage is now knowing what to build.</p>
+      </div>
+      <div class="lesson-card glass reveal">
+        <div class="l-num">03</div>
+        <h3 class="l-title">Constraints are a feature</h3>
+        <p class="l-desc">Building lean forces ruthless prioritisation. Every feature must justify itself. That discipline produces better products than unlimited engineering budgets.</p>
+      </div>
+      <div class="lesson-card glass reveal">
+        <div class="l-num">04</div>
+        <h3 class="l-title">Domain knowledge is the real moat</h3>
+        <p class="l-desc">Anyone can prompt Claude. What you can't replicate is 20 years of understanding how real estate actually works — the workflows, pain points, trust dynamics.</p>
+      </div>
+      <div class="lesson-card glass reveal">
+        <div class="l-num">05</div>
+        <h3 class="l-title">Failure is expensive R&D</h3>
+        <p class="l-desc">Each venture funded the knowledge base of the next. The ROI wasn't in revenue — it was in the pattern recognition that made attempt #5 possible.</p>
+      </div>
+      <div class="lesson-card glass reveal">
+        <div class="l-num">06</div>
+        <h3 class="l-title">Build in public, learn in public</h3>
+        <p class="l-desc">This page is day-one proof. Sharing the journey — including uncertainty, experiments, and the stack — creates more trust than any polished pitch deck ever could.</p>
+      </div>
     </div>
-    <div class="footer-meta">
-      Built with Claude · Hosted on Vercel · Versioned on GitHub<br>
-      <a href="https://basalos.com" target="_blank">BasalOS</a> · 
-      <a href="https://univen.co" target="_blank">UNIVEN</a> ·
-      Fifth attempt. Still going.
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">Navin <span>Oswal</span></div>
+      <ul class="footer-links">
+        <li><a href="https://basalos.com" target="_blank">BasalOS</a></li>
+        <li><a href="https://univen.co" target="_blank">UNIVEN</a></li>
+        <li><a href="https://www.linkedin.com/in/namoswal/" target="_blank">LinkedIn</a></li>
+      </ul>
+      <div class="footer-copy">Built with Claude · Vercel · GitHub</div>
     </div>
-  </footer>
+  </div>
+</footer>
 
-  <script>
-    // Intersection observer for scroll animations
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll('.timeline-item, .stack-card').forEach(el => {
-      observer.observe(el);
+<script>
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((el, i) => {
+      if (el.isIntersecting) {
+        setTimeout(() => el.target.classList.add('visible'), i * 70);
+      }
     });
+  }, { threshold: 0.1 });
 
-    // Stagger stack cards
-    document.querySelectorAll('.stack-card').forEach((card, i) => {
-      card.style.transitionDelay = `${i * 0.1}s`;
-    });
-  </script>
-
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
 </body>
 </html>
